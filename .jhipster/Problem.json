@@ -1,0 +1,58 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "solution",
+            "otherEntityName": "code",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "problem"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "submission",
+            "otherEntityName": "submission",
+            "otherEntityRelationshipName": "problem"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "test",
+            "otherEntityName": "testCase",
+            "otherEntityRelationshipName": "problem"
+        },
+        {
+            "relationshipType": "many-to-many",
+            "relationshipName": "contest",
+            "otherEntityName": "contest",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "problem"
+        },
+        {
+            "relationshipName": "creator",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "timelimit",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "pdflocation",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20180406140138",
+    "entityTableName": "problem",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "no",
+    "angularJSSuffix": "mySuffix"
+}

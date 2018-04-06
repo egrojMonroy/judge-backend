@@ -1,0 +1,59 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "many-to-many",
+            "javadoc": "list of problems in contest",
+            "otherEntityRelationshipName": "contest",
+            "relationshipName": "problem",
+            "otherEntityName": "problem",
+            "otherEntityField": "id",
+            "ownerSide": true
+        },
+        {
+            "relationshipType": "many-to-many",
+            "relationshipName": "coder",
+            "otherEntityName": "coder",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "contest"
+        },
+        {
+            "relationshipName": "creator",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "startdate",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "enddate",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "starttime",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "endtime",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20180406140137",
+    "entityTableName": "contest",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "no",
+    "angularJSSuffix": "mySuffix"
+}

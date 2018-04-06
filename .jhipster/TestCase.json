@@ -1,0 +1,27 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "problem",
+            "otherEntityName": "problem",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "inputfl",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "outputfl",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20180406140141",
+    "entityTableName": "test_case",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "no",
+    "angularJSSuffix": "mySuffix"
+}

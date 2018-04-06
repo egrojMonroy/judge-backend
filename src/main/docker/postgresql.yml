@@ -1,0 +1,11 @@
+version: '2'
+services:
+    juez-postgresql:
+        image: postgres:9.6.5
+        # volumes:
+        #     - ~/volumes/jhipster/juez/postgresql/:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_USER=juez
+            - POSTGRES_PASSWORD=
+        ports:
+            - 5432:5432

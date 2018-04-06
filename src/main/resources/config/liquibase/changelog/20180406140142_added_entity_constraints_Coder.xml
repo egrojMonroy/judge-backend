@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity Coder.
+    -->
+    <changeSet id="20180406140142-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="coders_id"
+                                 baseTableName="coder_contest"
+                                 constraintName="fk_coder_contest_coders_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="coder"/>
+        <addForeignKeyConstraint baseColumnNames="contests_id"
+                                 baseTableName="coder_contest"
+                                 constraintName="fk_coder_contest_contests_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="contest"/>
+        
+    </changeSet>
+</databaseChangeLog>
