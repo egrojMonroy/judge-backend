@@ -15,10 +15,16 @@ ulimit -v800000
     echo
 
 n=0
-# firt argument name of file , second name of user 
+cd $6
 
-g++ ~/Desktop/$1 -o comp$2 -fno-asm -O2 -Wall -lm --static -std=c++11 -DONLINE_JUDGE && time ./comp$2 < ~/Desktop/in1.in > out1.out 
+# 1 File nam  without exception 
+# 2 Compile name without exception
+# 3 in name 
+# 4 out name 
+g++ $1.cpp -o $2 -fno-asm -O2 -Wall -lm --static -std=c++11 -DONLINE_JUDGE && time ./$2 < $3.in > $4.out 
 
-if ! diff -bwB output.out out1.out &>/dev/null; then
-  >&2 echo "different"
+if ! diff -bwB $5.out $4.out &>/dev/null; then
+  echo "Wrong answer"
+else 
+  echo "Accepted"
 fi

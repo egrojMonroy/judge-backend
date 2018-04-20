@@ -31,6 +31,7 @@ public class FileService {
 
     
     public String runScript( String command, String values) {
+        System.out.println("COMMAND " + command);
         try {
                 String target = command; //new String("/home/jorge/ ");
                 Runtime rt = Runtime.getRuntime();

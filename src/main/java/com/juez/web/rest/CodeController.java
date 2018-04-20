@@ -1,6 +1,7 @@
 package com.juez.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.databind.node.BaseJsonNode;
 import com.juez.domain.Code;
 
 import com.juez.repository.CodeRepository;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.zalando.problem.spring.web.advice.general.ProblemAdviceTrait;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -69,52 +71,80 @@ public class CodeController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
         }
-         
+         System.out.println(code);
         String userName = "admin";
-        String currentDir = getCurrentDir();
-        String dir = currentDir + "/" + userName;
-        Path path = Paths.get(dir);
-        log.debug(path.toString());
-        log.debug(code);
-        if(!Files.exists(path))
-            createDir(dir);
-        
+        String problemName = "COST";
+        //create dir and return actual dir
+        String actualDir = createDir(userName, problemName, language);
+        System.out.println("The actual Dir is " + actualDir +" 1111111 ");
+        Path path = Paths.get(actualDir);
+
+        String veredict = "In Queue";
 		File f = new File(createFile(code, language, path));
         if(f.exists() && !f.isDirectory()) { 
-            runCode(currentDir,language,path.toString());
+            veredict = runCode(actualDir,language);
         }
         // Code code = codeMapper.toEntity(codeDTO);
         // code = codeRepository.save(code);
         // CodeDTO result = codeMapper.toDto(code);
 
-        return "YES";
+        return veredict;
     }
-    public void createDir(String dir) {
-        fileService.runScript("mkdir -p "+dir, "");
+    
+    public String createDir(String userName, String problemName, String language) {
+        String currentDir = getCurrentDir();
+        String dirToCreate = currentDir+"/"+userName+"/"+problemName+"/";
+        if(language.equalsIgnoreCase("java")){
+            dirToCreate += "java";
+        } else {
+            dirToCreate += "cpp";
+        }
+        System.out.println("DIR TO CREATE "+dirToCreate);
+        fileService.runScript("mkdir -p "+dirToCreate, "");
+        return  dirToCreate;
     }
-    public void runCode(String dir, String language, String path) {
-        if( language.equalsIgnoreCase("java")){
-            //Path where the file is created
-            String pathFile = path;
+    public String runCode(String dir, String language) {
+        System.out.println("333333");
+        
             //file name  without ext
             String fileName = "Main";
             //class name 
-            String name = "Main";
+            String compilationName = "Main";
             //input file name without ext
-            String input = "Main1";
+            String inputName = getDirInput();
             //output file name without ext 
-            String output = "Main1";
-            String veredict = fileService.runScript(dir + "/utils/compile_java.sh ",fileName+" "+name+" "+input+" "+output +" "+path);
-            System.out.println("the veredict is "+veredict);
-
-        } 
-        
+            String outputName = "Name"; 
+            String solutionName = getDirSolution();
+            String veredict = "In Queue";
+            String bashPath = getCurrentDir();
+            System.out.println("Bash Path " + bashPath);
+            if( language.equalsIgnoreCase("java")) { 
+                bashPath += "/utils/compile_java.sh ";
+                veredict = fileService.runScript(bashPath,fileName+" "+compilationName+" "+inputName+" "+outputName +" "+solutionName+" "+dir);
+            } else {
+                bashPath += "/utils/compile_c.sh ";
+                veredict = fileService.runScript(bashPath,fileName+" "+fileName+" "+inputName+" "+outputName+" "+solutionName+" "+dir );
+            }
+            return veredict;
+    
+    }
+    public String getDirSolution() {
+        return "/home/jorge/Desktop/Tests/solutionCostCutting";
+    }
+    public String getDirInput() {
+        return "/home/jorge/Desktop/Tests/Main";
     }
     public String getCurrentDir() {
         String currentDir = System.getProperty("user.dir");
         return currentDir;
     }
+
+    // @code is the actual code of the file
+    // @language is the language in witch the code is 
+    // @path is where to create the file 
+    // Returns (String) the complite filepath of the new code created 
     public String createFile(String code, String language, Path path){
+        System.out.println("222222");
         String newFileName = "Main";
         String filePath = "";
         try {

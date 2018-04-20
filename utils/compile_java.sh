@@ -16,10 +16,11 @@ n=0
 # second name of class
 # third name of input
 # fourth name of output 
-cd $5
+# fifth name of solution
+cd $6
 javac -J-Xms32m -J-Xmx256m $1.java  && time java $2 < $3.in > $4.out 
 
-if ! diff -bwB /home/jorge/src/judge-backend/utils/solution$2.out $4.out &>/dev/null; then
+if ! diff -bwB $5.out $4.out &>/dev/null; then
   echo "Wrong answer"
 else 
   echo "Accepted"
