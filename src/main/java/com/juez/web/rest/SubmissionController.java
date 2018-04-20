@@ -50,27 +50,39 @@ public class SubmissionController<LabPatientInfo> {
     @PostMapping("/post")
     @ResponseBody
     public String saveReport(@RequestPart MultipartFile reportFile) throws IOException {
-            System.out.println(reportFile.getOriginalFilename());
-            try {
-                File newFile = new File("/home/jorge/Desktop/create/" + reportFile.getOriginalFilename());  
-                if (!newFile.exists()) {  
-                    newFile.createNewFile();  
-                } else { 
-                    String q = reportFile.getOriginalFilename()+'1';
-                    newFile = new File("/home/jorge/Desktop/create/" + reportFile.getOriginalFilename()+"1");
-                    newFile.createNewFile();    
-                }
-                System.out.println("----------------------");
-                reportFile.transferTo(newFile); 
-             }catch(FileAlreadyExistsException e) {
-                System.out.println("ALREADY EXISTS");
-                throw e;
-             }
-             catch (IOException  e) {
-                System.out.println("Failed to do something, and cannot continue" + e.getMessage());                
-                e.printStackTrace();
-                throw e;
-             }
+        String content = "";
+        try { 
+            System.out.println("REPOT" +reportFile.getContentType());
+            System.out.println("NAME "+reportFile.getName());
+            System.out.println("OE"+ reportFile.getOriginalFilename());  
+            content = new String(reportFile.getBytes(), "UTF-8");
+            
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+        }
+         System.out.println("------------------------" + content);    
+        // System.out.println(reportFile.getOriginalFilename());
+        //     try {
+        //         File newFile = new File("/home/jorge/Desktop/create/" + reportFile.getOriginalFilename());  
+        //         if (!newFile.exists()) {  
+        //             newFile.createNewFile();  
+        //         } else { 
+        //             String q = reportFile.getOriginalFilename()+'1';
+        //             newFile = new File("/home/jorge/Desktop/create/" + reportFile.getOriginalFilename()+"1");
+        //             newFile.createNewFile();    
+        //         }
+        //         System.out.println("----------------------");
+        //         reportFile.transferTo(newFile); 
+        //      }catch(FileAlreadyExistsException e) {
+        //         System.out.println("ALREADY EXISTS");
+        //         throw e;
+        //      }
+        //      catch (IOException  e) {
+        //         System.out.println("Failed to do something, and cannot continue" + e.getMessage());                
+        //         e.printStackTrace();
+        //         throw e;
+        //      }
 
 			return "A-----.....----f";
            

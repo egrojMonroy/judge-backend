@@ -23,7 +23,7 @@ spring:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:postgresql://localhost:5432/juez
         username: juez
-        password:
+        password: juez
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL

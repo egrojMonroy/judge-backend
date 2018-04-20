@@ -9,16 +9,18 @@ set -e
 STEPS=$(dirname $(realpath $0))
 
 # Limit task memory usage to 4GB (better to fail than be slowed by heavy swapping).
-ulimit -v800000
-
-    echo "running steps from $STEPS"
-    echo
-
+ulimit -v8000000
 n=0
-# firt argument name of file , second name of class 
+#Arguments
+# firt name of file
+# second name of class
+# third name of input
+# fourth name of output 
+cd $5
+javac -J-Xms32m -J-Xmx256m $1.java  && time java $2 < $3.in > $4.out 
 
-javac -J-Xms32m -J-Xmx256m ~/Desktop/$1  && time java $2 < in1.in > out1.out
-
-if ! diff -bwB output.out out1.out &>/dev/null; then
-  >&2 echo "different"
+if ! diff -bwB /home/jorge/src/judge-backend/utils/solution$2.out $4.out &>/dev/null; then
+  echo "Wrong answer"
+else 
+  echo "Accepted"
 fi
