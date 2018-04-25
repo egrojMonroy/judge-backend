@@ -29,15 +29,15 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="definition" type="varchar(255)">
+            <column name="definition" type="varchar(3000)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="input_def" type="varchar(255)">
+            <column name="input_def" type="varchar(2000)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="output_def" type="varchar(255)">
+            <column name="output_def" type="varchar(2000)">
                 <constraints nullable="true" />
             </column>
             <column name="solution_id" type="bigint">

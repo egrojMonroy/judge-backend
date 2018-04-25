@@ -2,15 +2,15 @@
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipName": "problem",
-            "otherEntityName": "problem",
             "relationshipType": "many-to-one",
+            "relationshipName": "submitter",
+            "otherEntityName": "user",
             "otherEntityField": "id"
         },
         {
-            "relationshipName": "submitter",
-            "otherEntityName": "user",
             "relationshipType": "many-to-one",
+            "relationshipName": "problem",
+            "otherEntityName": "problem",
             "otherEntityField": "id"
         }
     ],
@@ -18,7 +18,7 @@
         {
             "fieldName": "status",
             "fieldType": "Veredict",
-            "fieldValues": "ACCEPTED,WRONG_ANSWER,TIME_LIMIT,IN_QUEUE"
+            "fieldValues": "ACCEPTED,WRONG_ANSWER,TIME_LIMIT,RUN_TIME_ERROR,IN_QUEUE"
         },
         {
             "fieldName": "runtime",
@@ -35,5 +35,6 @@
     "dto": "mapstruct",
     "pagination": "no",
     "service": "no",
+    "jpaMetamodelFiltering": false,
     "angularJSSuffix": "mySuffix"
 }

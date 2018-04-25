@@ -8,15 +8,15 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity Submission and its DTO SubmissionDTO.
  */
-@Mapper(componentModel = "spring", uses = {ProblemMapper.class, UserMapper.class})
+@Mapper(componentModel = "spring", uses = {UserMapper.class, ProblemMapper.class})
 public interface SubmissionMapper extends EntityMapper<SubmissionDTO, Submission> {
 
-    @Mapping(source = "problem.id", target = "problemId")
     @Mapping(source = "submitter.id", target = "submitterId")
+    @Mapping(source = "problem.id", target = "problemId")
     SubmissionDTO toDto(Submission submission);
 
-    @Mapping(source = "problemId", target = "problem")
     @Mapping(source = "submitterId", target = "submitter")
+    @Mapping(source = "problemId", target = "problem")
     Submission toEntity(SubmissionDTO submissionDTO);
 
     default Submission fromId(Long id) {

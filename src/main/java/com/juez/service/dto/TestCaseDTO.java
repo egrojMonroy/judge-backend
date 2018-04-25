@@ -1,6 +1,7 @@
 package com.juez.service.dto;
 
 
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,8 +14,10 @@ public class TestCaseDTO implements Serializable {
 
     private Long id;
 
+    @Size(max = 3000)
     private String inputfl;
 
+    @Size(max = 3000)
     private String outputfl;
 
     private Boolean show;

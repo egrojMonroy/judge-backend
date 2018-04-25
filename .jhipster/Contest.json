@@ -2,6 +2,12 @@
     "fluentMethods": true,
     "relationships": [
         {
+            "relationshipType": "many-to-one",
+            "relationshipName": "creator",
+            "otherEntityName": "user",
+            "otherEntityField": "id"
+        },
+        {
             "relationshipType": "many-to-many",
             "javadoc": "list of problems in contest",
             "otherEntityRelationshipName": "contest",
@@ -16,12 +22,6 @@
             "otherEntityName": "coder",
             "ownerSide": false,
             "otherEntityRelationshipName": "contest"
-        },
-        {
-            "relationshipName": "creator",
-            "otherEntityName": "user",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id"
         }
     ],
     "fields": [
@@ -38,14 +38,6 @@
             "fieldType": "ZonedDateTime"
         },
         {
-            "fieldName": "starttime",
-            "fieldType": "ZonedDateTime"
-        },
-        {
-            "fieldName": "endtime",
-            "fieldType": "ZonedDateTime"
-        },
-        {
             "fieldName": "type",
             "fieldType": "String"
         }
@@ -55,5 +47,6 @@
     "dto": "mapstruct",
     "pagination": "pagination",
     "service": "no",
+    "jpaMetamodelFiltering": false,
     "angularJSSuffix": "mySuffix"
 }

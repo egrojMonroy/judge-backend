@@ -33,14 +33,6 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="starttime" type="timestamp">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="endtime" type="timestamp">
-                <constraints nullable="true" />
-            </column>
-
             <column name="jhi_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -53,8 +45,6 @@
         </createTable>
         <dropDefaultValue tableName="contest" columnName="startdate" columnDataType="datetime"/>
         <dropDefaultValue tableName="contest" columnName="enddate" columnDataType="datetime"/>
-        <dropDefaultValue tableName="contest" columnName="starttime" columnDataType="datetime"/>
-        <dropDefaultValue tableName="contest" columnName="endtime" columnDataType="datetime"/>
         
         <createTable tableName="contest_problem">
             <column name="problems_id" type="bigint">

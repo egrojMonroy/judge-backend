@@ -39,10 +39,10 @@ public class Submission implements Serializable {
     private Language language;
 
     @ManyToOne
-    private Problem problem;
+    private User submitter;
 
     @ManyToOne
-    private User submitter;
+    private Problem problem;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -92,19 +92,6 @@ public class Submission implements Serializable {
         this.language = language;
     }
 
-    public Problem getProblem() {
-        return problem;
-    }
-
-    public Submission problem(Problem problem) {
-        this.problem = problem;
-        return this;
-    }
-
-    public void setProblem(Problem problem) {
-        this.problem = problem;
-    }
-
     public User getSubmitter() {
         return submitter;
     }
@@ -116,6 +103,19 @@ public class Submission implements Serializable {
 
     public void setSubmitter(User user) {
         this.submitter = user;
+    }
+
+    public Problem getProblem() {
+        return problem;
+    }
+
+    public Submission problem(Problem problem) {
+        this.problem = problem;
+        return this;
+    }
+
+    public void setProblem(Problem problem) {
+        this.problem = problem;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

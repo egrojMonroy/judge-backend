@@ -20,15 +20,11 @@ public class ContestDTO implements Serializable {
 
     private ZonedDateTime enddate;
 
-    private ZonedDateTime starttime;
-
-    private ZonedDateTime endtime;
-
     private String type;
 
-    private Set<ProblemDTO> problems = new HashSet<>();
-
     private Long creatorId;
+
+    private Set<ProblemDTO> problems = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -62,22 +58,6 @@ public class ContestDTO implements Serializable {
         this.enddate = enddate;
     }
 
-    public ZonedDateTime getStarttime() {
-        return starttime;
-    }
-
-    public void setStarttime(ZonedDateTime starttime) {
-        this.starttime = starttime;
-    }
-
-    public ZonedDateTime getEndtime() {
-        return endtime;
-    }
-
-    public void setEndtime(ZonedDateTime endtime) {
-        this.endtime = endtime;
-    }
-
     public String getType() {
         return type;
     }
@@ -86,20 +66,20 @@ public class ContestDTO implements Serializable {
         this.type = type;
     }
 
-    public Set<ProblemDTO> getProblems() {
-        return problems;
-    }
-
-    public void setProblems(Set<ProblemDTO> problems) {
-        this.problems = problems;
-    }
-
     public Long getCreatorId() {
         return creatorId;
     }
 
     public void setCreatorId(Long userId) {
         this.creatorId = userId;
+    }
+
+    public Set<ProblemDTO> getProblems() {
+        return problems;
+    }
+
+    public void setProblems(Set<ProblemDTO> problems) {
+        this.problems = problems;
     }
 
     @Override
@@ -130,8 +110,6 @@ public class ContestDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", startdate='" + getStartdate() + "'" +
             ", enddate='" + getEnddate() + "'" +
-            ", starttime='" + getStarttime() + "'" +
-            ", endtime='" + getEndtime() + "'" +
             ", type='" + getType() + "'" +
             "}";
     }

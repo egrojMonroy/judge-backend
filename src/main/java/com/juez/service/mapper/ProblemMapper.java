@@ -18,8 +18,8 @@ public interface ProblemMapper extends EntityMapper<ProblemDTO, Problem> {
     @Mapping(source = "solutionId", target = "solution")
     @Mapping(target = "submissions", ignore = true)
     @Mapping(target = "tests", ignore = true)
-    @Mapping(target = "contests", ignore = true)
     @Mapping(source = "creatorId", target = "creator")
+    @Mapping(target = "contests", ignore = true)
     Problem toEntity(ProblemDTO problemDTO);
 
     default Problem fromId(Long id) {

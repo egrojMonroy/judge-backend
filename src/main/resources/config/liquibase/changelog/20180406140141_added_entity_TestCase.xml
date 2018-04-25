@@ -21,11 +21,11 @@
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="inputfl" type="varchar(255)">
+            <column name="inputfl" type="varchar(3000)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="outputfl" type="varchar(255)">
+            <column name="outputfl" type="varchar(3000)">
                 <constraints nullable="true" />
             </column>
 

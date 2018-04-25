@@ -2,20 +2,28 @@
     "fluentMethods": true,
     "relationships": [
         {
+            "relationshipType": "many-to-one",
             "relationshipName": "problem",
             "otherEntityName": "problem",
-            "relationshipType": "many-to-one",
             "otherEntityField": "id"
         }
     ],
     "fields": [
         {
             "fieldName": "inputfl",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 3000
         },
         {
             "fieldName": "outputfl",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 3000
         },
         {
             "fieldName": "show",
@@ -27,5 +35,6 @@
     "dto": "mapstruct",
     "pagination": "no",
     "service": "no",
+    "jpaMetamodelFiltering": false,
     "angularJSSuffix": "mySuffix"
 }

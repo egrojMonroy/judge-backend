@@ -37,14 +37,11 @@ public class Contest implements Serializable {
     @Column(name = "enddate")
     private ZonedDateTime enddate;
 
-    @Column(name = "starttime")
-    private ZonedDateTime starttime;
-
-    @Column(name = "endtime")
-    private ZonedDateTime endtime;
-
     @Column(name = "jhi_type")
     private String type;
+
+    @ManyToOne
+    private User creator;
 
     /**
      * list of problems in contest
@@ -61,9 +58,6 @@ public class Contest implements Serializable {
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Coder> coders = new HashSet<>();
-
-    @ManyToOne
-    private User creator;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -113,32 +107,6 @@ public class Contest implements Serializable {
         this.enddate = enddate;
     }
 
-    public ZonedDateTime getStarttime() {
-        return starttime;
-    }
-
-    public Contest starttime(ZonedDateTime starttime) {
-        this.starttime = starttime;
-        return this;
-    }
-
-    public void setStarttime(ZonedDateTime starttime) {
-        this.starttime = starttime;
-    }
-
-    public ZonedDateTime getEndtime() {
-        return endtime;
-    }
-
-    public Contest endtime(ZonedDateTime endtime) {
-        this.endtime = endtime;
-        return this;
-    }
-
-    public void setEndtime(ZonedDateTime endtime) {
-        this.endtime = endtime;
-    }
-
     public String getType() {
         return type;
     }
@@ -150,6 +118,19 @@ public class Contest implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public Contest creator(User user) {
+        this.creator = user;
+        return this;
+    }
+
+    public void setCreator(User user) {
+        this.creator = user;
     }
 
     public Set<Problem> getProblems() {
@@ -201,19 +182,6 @@ public class Contest implements Serializable {
     public void setCoders(Set<Coder> coders) {
         this.coders = coders;
     }
-
-    public User getCreator() {
-        return creator;
-    }
-
-    public Contest creator(User user) {
-        this.creator = user;
-        return this;
-    }
-
-    public void setCreator(User user) {
-        this.creator = user;
-    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -243,8 +211,6 @@ public class Contest implements Serializable {
             ", name='" + getName() + "'" +
             ", startdate='" + getStartdate() + "'" +
             ", enddate='" + getEnddate() + "'" +
-            ", starttime='" + getStarttime() + "'" +
-            ", endtime='" + getEndtime() + "'" +
             ", type='" + getType() + "'" +
             "}";
     }

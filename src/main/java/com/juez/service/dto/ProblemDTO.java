@@ -1,6 +1,7 @@
 package com.juez.service.dto;
 
 
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,10 +18,13 @@ public class ProblemDTO implements Serializable {
 
     private Integer timelimit;
 
+    @Size(max = 3000)
     private String definition;
 
+    @Size(max = 2000)
     private String inputDef;
 
+    @Size(max = 2000)
     private String outputDef;
 
     private Long solutionId;

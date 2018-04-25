@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -49,7 +50,7 @@ public class TestCaseResource {
      */
     @PostMapping("/test-cases")
     @Timed
-    public ResponseEntity<TestCaseDTO> createTestCase(@RequestBody TestCaseDTO testCaseDTO) throws URISyntaxException {
+    public ResponseEntity<TestCaseDTO> createTestCase(@Valid @RequestBody TestCaseDTO testCaseDTO) throws URISyntaxException {
         log.debug("REST request to save TestCase : {}", testCaseDTO);
         if (testCaseDTO.getId() != null) {
             throw new BadRequestAlertException("A new testCase cannot already have an ID", ENTITY_NAME, "idexists");
@@ -73,7 +74,7 @@ public class TestCaseResource {
      */
     @PutMapping("/test-cases")
     @Timed
-    public ResponseEntity<TestCaseDTO> updateTestCase(@RequestBody TestCaseDTO testCaseDTO) throws URISyntaxException {
+    public ResponseEntity<TestCaseDTO> updateTestCase(@Valid @RequestBody TestCaseDTO testCaseDTO) throws URISyntaxException {
         log.debug("REST request to update TestCase : {}", testCaseDTO);
         if (testCaseDTO.getId() == null) {
             return createTestCase(testCaseDTO);

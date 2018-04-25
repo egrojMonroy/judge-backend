@@ -54,12 +54,6 @@ public class ContestResourceIntTest {
     private static final ZonedDateTime DEFAULT_ENDDATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_ENDDATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
-    private static final ZonedDateTime DEFAULT_STARTTIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_STARTTIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
-
-    private static final ZonedDateTime DEFAULT_ENDTIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_ENDTIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
-
     private static final String DEFAULT_TYPE = "AAAAAAAAAA";
     private static final String UPDATED_TYPE = "BBBBBBBBBB";
 
@@ -107,8 +101,6 @@ public class ContestResourceIntTest {
             .name(DEFAULT_NAME)
             .startdate(DEFAULT_STARTDATE)
             .enddate(DEFAULT_ENDDATE)
-            .starttime(DEFAULT_STARTTIME)
-            .endtime(DEFAULT_ENDTIME)
             .type(DEFAULT_TYPE);
         return contest;
     }
@@ -137,8 +129,6 @@ public class ContestResourceIntTest {
         assertThat(testContest.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testContest.getStartdate()).isEqualTo(DEFAULT_STARTDATE);
         assertThat(testContest.getEnddate()).isEqualTo(DEFAULT_ENDDATE);
-        assertThat(testContest.getStarttime()).isEqualTo(DEFAULT_STARTTIME);
-        assertThat(testContest.getEndtime()).isEqualTo(DEFAULT_ENDTIME);
         assertThat(testContest.getType()).isEqualTo(DEFAULT_TYPE);
     }
 
@@ -176,8 +166,6 @@ public class ContestResourceIntTest {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].startdate").value(hasItem(sameInstant(DEFAULT_STARTDATE))))
             .andExpect(jsonPath("$.[*].enddate").value(hasItem(sameInstant(DEFAULT_ENDDATE))))
-            .andExpect(jsonPath("$.[*].starttime").value(hasItem(sameInstant(DEFAULT_STARTTIME))))
-            .andExpect(jsonPath("$.[*].endtime").value(hasItem(sameInstant(DEFAULT_ENDTIME))))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
     }
 
@@ -195,8 +183,6 @@ public class ContestResourceIntTest {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.startdate").value(sameInstant(DEFAULT_STARTDATE)))
             .andExpect(jsonPath("$.enddate").value(sameInstant(DEFAULT_ENDDATE)))
-            .andExpect(jsonPath("$.starttime").value(sameInstant(DEFAULT_STARTTIME)))
-            .andExpect(jsonPath("$.endtime").value(sameInstant(DEFAULT_ENDTIME)))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()));
     }
 
@@ -223,8 +209,6 @@ public class ContestResourceIntTest {
             .name(UPDATED_NAME)
             .startdate(UPDATED_STARTDATE)
             .enddate(UPDATED_ENDDATE)
-            .starttime(UPDATED_STARTTIME)
-            .endtime(UPDATED_ENDTIME)
             .type(UPDATED_TYPE);
         ContestDTO contestDTO = contestMapper.toDto(updatedContest);
 
@@ -240,8 +224,6 @@ public class ContestResourceIntTest {
         assertThat(testContest.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testContest.getStartdate()).isEqualTo(UPDATED_STARTDATE);
         assertThat(testContest.getEnddate()).isEqualTo(UPDATED_ENDDATE);
-        assertThat(testContest.getStarttime()).isEqualTo(UPDATED_STARTTIME);
-        assertThat(testContest.getEndtime()).isEqualTo(UPDATED_ENDTIME);
         assertThat(testContest.getType()).isEqualTo(UPDATED_TYPE);
     }
 

@@ -21,9 +21,9 @@ public class SubmissionDTO implements Serializable {
 
     private Language language;
 
-    private Long problemId;
-
     private Long submitterId;
+
+    private Long problemId;
 
     public Long getId() {
         return id;
@@ -57,20 +57,20 @@ public class SubmissionDTO implements Serializable {
         this.language = language;
     }
 
-    public Long getProblemId() {
-        return problemId;
-    }
-
-    public void setProblemId(Long problemId) {
-        this.problemId = problemId;
-    }
-
     public Long getSubmitterId() {
         return submitterId;
     }
 
     public void setSubmitterId(Long userId) {
         this.submitterId = userId;
+    }
+
+    public Long getProblemId() {
+        return problemId;
+    }
+
+    public void setProblemId(Long problemId) {
+        this.problemId = problemId;
     }
 
     @Override

@@ -4,6 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -23,10 +24,12 @@ public class TestCase implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Column(name = "inputfl")
+    @Size(max = 3000)
+    @Column(name = "inputfl", length = 3000)
     private String inputfl;
 
-    @Column(name = "outputfl")
+    @Size(max = 3000)
+    @Column(name = "outputfl", length = 3000)
     private String outputfl;
 
     @Column(name = "jhi_show")

@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -32,13 +33,16 @@ public class Problem implements Serializable {
     @Column(name = "timelimit")
     private Integer timelimit;
 
-    @Column(name = "definition")
+    @Size(max = 3000)
+    @Column(name = "definition", length = 3000)
     private String definition;
 
-    @Column(name = "input_def")
+    @Size(max = 2000)
+    @Column(name = "input_def", length = 2000)
     private String inputDef;
 
-    @Column(name = "output_def")
+    @Size(max = 2000)
+    @Column(name = "output_def", length = 2000)
     private String outputDef;
 
     @OneToOne
@@ -55,13 +59,13 @@ public class Problem implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<TestCase> tests = new HashSet<>();
 
+    @ManyToOne
+    private User creator;
+
     @ManyToMany(mappedBy = "problems")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Contest> contests = new HashSet<>();
-
-    @ManyToOne
-    private User creator;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -200,6 +204,19 @@ public class Problem implements Serializable {
         this.tests = testCases;
     }
 
+    public User getCreator() {
+        return creator;
+    }
+
+    public Problem creator(User user) {
+        this.creator = user;
+        return this;
+    }
+
+    public void setCreator(User user) {
+        this.creator = user;
+    }
+
     public Set<Contest> getContests() {
         return contests;
     }
@@ -223,19 +240,6 @@ public class Problem implements Serializable {
 
     public void setContests(Set<Contest> contests) {
         this.contests = contests;
-    }
-
-    public User getCreator() {
-        return creator;
-    }
-
-    public Problem creator(User user) {
-        this.creator = user;
-        return this;
-    }
-
-    public void setCreator(User user) {
-        this.creator = user;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

@@ -4,14 +4,14 @@ entity Contest (contest) {
   name String,
   startdate ZonedDateTime,
   enddate ZonedDateTime,
-  starttime ZonedDateTime,
-  endtime ZonedDateTime,
   type String
 }
 entity Problem (problem) {
   name String,
   timelimit Integer,
-  pdflocation String
+  definition String maxlength(3000),
+  inputDef String maxlength(2000),
+  outputDef String maxlength(2000),
 }
 entity Submission (submission) {
   status Veredict,
@@ -23,8 +23,9 @@ entity Code (code) {
   dateupload ZonedDateTime
 }
 entity TestCase (test_case) {
-  inputfl String,
-  outputfl String
+  inputfl String maxlength(3000),
+  outputfl String maxlength(3000),
+  show Boolean
 }
 entity Coder (coder) {
   ranking String
@@ -34,6 +35,7 @@ enum Veredict {
   ACCEPTED,
   WRONG_ANSWER,
   TIME_LIMIT,
+  RUN_TIME_ERROR,
   IN_QUEUE
 }
 

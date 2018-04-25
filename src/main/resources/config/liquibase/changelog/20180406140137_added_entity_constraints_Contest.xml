@@ -8,6 +8,12 @@
     -->
     <changeSet id="20180406140137-2" author="jhipster">
         
+        <addForeignKeyConstraint baseColumnNames="creator_id"
+                                 baseTableName="contest"
+                                 constraintName="fk_contest_creator_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
         <addForeignKeyConstraint baseColumnNames="contests_id"
                                  baseTableName="contest_problem"
                                  constraintName="fk_contest_problem_contests_id"
@@ -19,11 +25,5 @@
                                  referencedColumnNames="id"
                                  referencedTableName="problem"/>
         
-        <addForeignKeyConstraint baseColumnNames="creator_id"
-                                 baseTableName="contest"
-                                 constraintName="fk_contest_creator_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="jhi_user"/>
-
     </changeSet>
 </databaseChangeLog>

@@ -2,6 +2,14 @@
     "fluentMethods": true,
     "relationships": [
         {
+            "relationshipType": "one-to-one",
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "coder"
+        },
+        {
             "relationshipType": "many-to-many",
             "javadoc": "Registered coders in contest",
             "otherEntityRelationshipName": "coder",
@@ -9,14 +17,6 @@
             "otherEntityName": "contest",
             "otherEntityField": "id",
             "ownerSide": true
-        },
-        {
-            "relationshipType": "one-to-one",
-            "relationshipName": "user",
-            "otherEntityName": "user",
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "coder"
         }
     ],
     "fields": [
@@ -30,5 +30,6 @@
     "dto": "mapstruct",
     "pagination": "no",
     "service": "no",
+    "jpaMetamodelFiltering": false,
     "angularJSSuffix": "mySuffix"
 }
