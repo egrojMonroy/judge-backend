@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.juez.domain.Submission;
 
 import com.juez.repository.SubmissionRepository;
+import com.juez.web.rest.errors.BadRequestAlertException;
 import com.juez.web.rest.util.HeaderUtil;
 import com.juez.service.dto.SubmissionDTO;
 import com.juez.service.mapper.SubmissionMapper;
@@ -51,7 +52,7 @@ public class SubmissionResource {
     public ResponseEntity<SubmissionDTO> createSubmission(@RequestBody SubmissionDTO submissionDTO) throws URISyntaxException {
         log.debug("REST request to save Submission : {}", submissionDTO);
         if (submissionDTO.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new submission cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new submission cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Submission submission = submissionMapper.toEntity(submissionDTO);
         submission = submissionRepository.save(submission);

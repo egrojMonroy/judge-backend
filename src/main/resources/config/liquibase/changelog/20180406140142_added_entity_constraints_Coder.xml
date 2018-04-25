@@ -19,5 +19,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="contest"/>
         
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="coder"
+                                 constraintName="fk_coder_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
     </changeSet>
 </databaseChangeLog>

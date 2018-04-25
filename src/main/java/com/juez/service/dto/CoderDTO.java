@@ -17,6 +17,8 @@ public class CoderDTO implements Serializable {
 
     private Set<ContestDTO> contests = new HashSet<>();
 
+    private Long userId;
+
     public Long getId() {
         return id;
     }
@@ -39,6 +41,14 @@ public class CoderDTO implements Serializable {
 
     public void setContests(Set<ContestDTO> contests) {
         this.contests = contests;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     @Override

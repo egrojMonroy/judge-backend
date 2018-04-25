@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,8 +32,14 @@ public class Problem implements Serializable {
     @Column(name = "timelimit")
     private Integer timelimit;
 
-    @Column(name = "pdflocation")
-    private String pdflocation;
+    @Column(name = "definition")
+    private String definition;
+
+    @Column(name = "input_def")
+    private String inputDef;
+
+    @Column(name = "output_def")
+    private String outputDef;
 
     @OneToOne
     @JoinColumn(unique = true)
@@ -53,7 +60,10 @@ public class Problem implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Contest> contests = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - Jhipster will add fields here, do not remove
+    @ManyToOne
+    private User creator;
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -88,17 +98,43 @@ public class Problem implements Serializable {
         this.timelimit = timelimit;
     }
 
-    public String getPdflocation() {
-        return pdflocation;
+    public String getDefinition() {
+        return definition;
     }
 
-    public Problem pdflocation(String pdflocation) {
-        this.pdflocation = pdflocation;
+    public Problem definition(String definition) {
+        this.definition = definition;
         return this;
     }
 
-    public void setPdflocation(String pdflocation) {
-        this.pdflocation = pdflocation;
+    public void setDefinition(String definition) {
+        this.definition = definition;
+    }
+
+    public String getInputDef() {
+        return inputDef;
+    }
+
+    public Problem inputDef(String inputDef) {
+        this.inputDef = inputDef;
+        return this;
+    }
+
+    public void setInputDef(String inputDef) {
+        this.inputDef = inputDef;
+    }
+
+    public String getOutputDef() {
+        return outputDef;
+    }
+
+    public Problem outputDef(String outputDef) {
+        this.outputDef = outputDef;
+        return this;
+    }
+
+    public void setOutputDef(String outputDef) {
+        this.outputDef = outputDef;
     }
 
     public Code getSolution() {
@@ -188,7 +224,20 @@ public class Problem implements Serializable {
     public void setContests(Set<Contest> contests) {
         this.contests = contests;
     }
-    // jhipster-needle-entity-add-getters-setters - Jhipster will add getters and setters here, do not remove
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public Problem creator(User user) {
+        this.creator = user;
+        return this;
+    }
+
+    public void setCreator(User user) {
+        this.creator = user;
+    }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -215,8 +264,10 @@ public class Problem implements Serializable {
         return "Problem{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", timelimit='" + getTimelimit() + "'" +
-            ", pdflocation='" + getPdflocation() + "'" +
+            ", timelimit=" + getTimelimit() +
+            ", definition='" + getDefinition() + "'" +
+            ", inputDef='" + getInputDef() + "'" +
+            ", outputDef='" + getOutputDef() + "'" +
             "}";
     }
 }

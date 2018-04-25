@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.juez.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -71,6 +72,7 @@ public class CoderResourceIntTest {
         this.restCoderMockMvc = MockMvcBuilders.standaloneSetup(coderResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -175,6 +177,8 @@ public class CoderResourceIntTest {
 
         // Update the coder
         Coder updatedCoder = coderRepository.findOne(coder.getId());
+        // Disconnect from session so that the updates on updatedCoder are not directly saved in db
+        em.detach(updatedCoder);
         updatedCoder
             .ranking(UPDATED_RANKING);
         CoderDTO coderDTO = coderMapper.toDto(updatedCoder);

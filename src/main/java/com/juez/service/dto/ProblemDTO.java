@@ -17,9 +17,15 @@ public class ProblemDTO implements Serializable {
 
     private Integer timelimit;
 
-    private String pdflocation;
+    private String definition;
+
+    private String inputDef;
+
+    private String outputDef;
 
     private Long solutionId;
+
+    private Long creatorId;
 
     public Long getId() {
         return id;
@@ -45,12 +51,28 @@ public class ProblemDTO implements Serializable {
         this.timelimit = timelimit;
     }
 
-    public String getPdflocation() {
-        return pdflocation;
+    public String getDefinition() {
+        return definition;
     }
 
-    public void setPdflocation(String pdflocation) {
-        this.pdflocation = pdflocation;
+    public void setDefinition(String definition) {
+        this.definition = definition;
+    }
+
+    public String getInputDef() {
+        return inputDef;
+    }
+
+    public void setInputDef(String inputDef) {
+        this.inputDef = inputDef;
+    }
+
+    public String getOutputDef() {
+        return outputDef;
+    }
+
+    public void setOutputDef(String outputDef) {
+        this.outputDef = outputDef;
     }
 
     public Long getSolutionId() {
@@ -59,6 +81,14 @@ public class ProblemDTO implements Serializable {
 
     public void setSolutionId(Long codeId) {
         this.solutionId = codeId;
+    }
+
+    public Long getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(Long userId) {
+        this.creatorId = userId;
     }
 
     @Override
@@ -87,8 +117,10 @@ public class ProblemDTO implements Serializable {
         return "ProblemDTO{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", timelimit='" + getTimelimit() + "'" +
-            ", pdflocation='" + getPdflocation() + "'" +
+            ", timelimit=" + getTimelimit() +
+            ", definition='" + getDefinition() + "'" +
+            ", inputDef='" + getInputDef() + "'" +
+            ", outputDef='" + getOutputDef() + "'" +
             "}";
     }
 }

@@ -28,6 +28,8 @@ public class ContestDTO implements Serializable {
 
     private Set<ProblemDTO> problems = new HashSet<>();
 
+    private Long creatorId;
+
     public Long getId() {
         return id;
     }
@@ -90,6 +92,14 @@ public class ContestDTO implements Serializable {
 
     public void setProblems(Set<ProblemDTO> problems) {
         this.problems = problems;
+    }
+
+    public Long getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(Long userId) {
+        this.creatorId = userId;
     }
 
     @Override

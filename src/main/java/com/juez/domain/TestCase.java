@@ -4,6 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -28,10 +29,13 @@ public class TestCase implements Serializable {
     @Column(name = "outputfl")
     private String outputfl;
 
+    @Column(name = "jhi_show")
+    private Boolean show;
+
     @ManyToOne
     private Problem problem;
 
-    // jhipster-needle-entity-add-field - Jhipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -66,6 +70,19 @@ public class TestCase implements Serializable {
         this.outputfl = outputfl;
     }
 
+    public Boolean isShow() {
+        return show;
+    }
+
+    public TestCase show(Boolean show) {
+        this.show = show;
+        return this;
+    }
+
+    public void setShow(Boolean show) {
+        this.show = show;
+    }
+
     public Problem getProblem() {
         return problem;
     }
@@ -78,7 +95,7 @@ public class TestCase implements Serializable {
     public void setProblem(Problem problem) {
         this.problem = problem;
     }
-    // jhipster-needle-entity-add-getters-setters - Jhipster will add getters and setters here, do not remove
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -106,6 +123,7 @@ public class TestCase implements Serializable {
             "id=" + getId() +
             ", inputfl='" + getInputfl() + "'" +
             ", outputfl='" + getOutputfl() + "'" +
+            ", show='" + isShow() + "'" +
             "}";
     }
 }

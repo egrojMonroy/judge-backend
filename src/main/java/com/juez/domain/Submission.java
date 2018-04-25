@@ -4,6 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -40,7 +41,10 @@ public class Submission implements Serializable {
     @ManyToOne
     private Problem problem;
 
-    // jhipster-needle-entity-add-field - Jhipster will add fields here, do not remove
+    @ManyToOne
+    private User submitter;
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -100,7 +104,20 @@ public class Submission implements Serializable {
     public void setProblem(Problem problem) {
         this.problem = problem;
     }
-    // jhipster-needle-entity-add-getters-setters - Jhipster will add getters and setters here, do not remove
+
+    public User getSubmitter() {
+        return submitter;
+    }
+
+    public Submission submitter(User user) {
+        this.submitter = user;
+        return this;
+    }
+
+    public void setSubmitter(User user) {
+        this.submitter = user;
+    }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -127,7 +144,7 @@ public class Submission implements Serializable {
         return "Submission{" +
             "id=" + getId() +
             ", status='" + getStatus() + "'" +
-            ", runtime='" + getRuntime() + "'" +
+            ", runtime=" + getRuntime() +
             ", language='" + getLanguage() + "'" +
             "}";
     }

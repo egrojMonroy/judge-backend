@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +40,11 @@ public class Coder implements Serializable {
                inverseJoinColumns = @JoinColumn(name="contests_id", referencedColumnName="id"))
     private Set<Contest> contests = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - Jhipster will add fields here, do not remove
+    @OneToOne
+    @JoinColumn(unique = true)
+    private User user;
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -85,7 +90,20 @@ public class Coder implements Serializable {
     public void setContests(Set<Contest> contests) {
         this.contests = contests;
     }
-    // jhipster-needle-entity-add-getters-setters - Jhipster will add getters and setters here, do not remove
+
+    public User getUser() {
+        return user;
+    }
+
+    public Coder user(User user) {
+        this.user = user;
+        return this;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {

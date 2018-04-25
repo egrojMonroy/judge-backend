@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.juez.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -44,6 +45,9 @@ public class TestCaseResourceIntTest {
 
     private static final String DEFAULT_OUTPUTFL = "AAAAAAAAAA";
     private static final String UPDATED_OUTPUTFL = "BBBBBBBBBB";
+
+    private static final Boolean DEFAULT_SHOW = false;
+    private static final Boolean UPDATED_SHOW = true;
 
     @Autowired
     private TestCaseRepository testCaseRepository;
@@ -74,6 +78,7 @@ public class TestCaseResourceIntTest {
         this.restTestCaseMockMvc = MockMvcBuilders.standaloneSetup(testCaseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -86,7 +91,8 @@ public class TestCaseResourceIntTest {
     public static TestCase createEntity(EntityManager em) {
         TestCase testCase = new TestCase()
             .inputfl(DEFAULT_INPUTFL)
-            .outputfl(DEFAULT_OUTPUTFL);
+            .outputfl(DEFAULT_OUTPUTFL)
+            .show(DEFAULT_SHOW);
         return testCase;
     }
 
@@ -113,6 +119,7 @@ public class TestCaseResourceIntTest {
         TestCase testTestCase = testCaseList.get(testCaseList.size() - 1);
         assertThat(testTestCase.getInputfl()).isEqualTo(DEFAULT_INPUTFL);
         assertThat(testTestCase.getOutputfl()).isEqualTo(DEFAULT_OUTPUTFL);
+        assertThat(testTestCase.isShow()).isEqualTo(DEFAULT_SHOW);
     }
 
     @Test
@@ -147,7 +154,8 @@ public class TestCaseResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(testCase.getId().intValue())))
             .andExpect(jsonPath("$.[*].inputfl").value(hasItem(DEFAULT_INPUTFL.toString())))
-            .andExpect(jsonPath("$.[*].outputfl").value(hasItem(DEFAULT_OUTPUTFL.toString())));
+            .andExpect(jsonPath("$.[*].outputfl").value(hasItem(DEFAULT_OUTPUTFL.toString())))
+            .andExpect(jsonPath("$.[*].show").value(hasItem(DEFAULT_SHOW.booleanValue())));
     }
 
     @Test
@@ -162,7 +170,8 @@ public class TestCaseResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(testCase.getId().intValue()))
             .andExpect(jsonPath("$.inputfl").value(DEFAULT_INPUTFL.toString()))
-            .andExpect(jsonPath("$.outputfl").value(DEFAULT_OUTPUTFL.toString()));
+            .andExpect(jsonPath("$.outputfl").value(DEFAULT_OUTPUTFL.toString()))
+            .andExpect(jsonPath("$.show").value(DEFAULT_SHOW.booleanValue()));
     }
 
     @Test
@@ -182,9 +191,12 @@ public class TestCaseResourceIntTest {
 
         // Update the testCase
         TestCase updatedTestCase = testCaseRepository.findOne(testCase.getId());
+        // Disconnect from session so that the updates on updatedTestCase are not directly saved in db
+        em.detach(updatedTestCase);
         updatedTestCase
             .inputfl(UPDATED_INPUTFL)
-            .outputfl(UPDATED_OUTPUTFL);
+            .outputfl(UPDATED_OUTPUTFL)
+            .show(UPDATED_SHOW);
         TestCaseDTO testCaseDTO = testCaseMapper.toDto(updatedTestCase);
 
         restTestCaseMockMvc.perform(put("/api/test-cases")
@@ -198,6 +210,7 @@ public class TestCaseResourceIntTest {
         TestCase testTestCase = testCaseList.get(testCaseList.size() - 1);
         assertThat(testTestCase.getInputfl()).isEqualTo(UPDATED_INPUTFL);
         assertThat(testTestCase.getOutputfl()).isEqualTo(UPDATED_OUTPUTFL);
+        assertThat(testTestCase.isShow()).isEqualTo(UPDATED_SHOW);
     }
 
     @Test

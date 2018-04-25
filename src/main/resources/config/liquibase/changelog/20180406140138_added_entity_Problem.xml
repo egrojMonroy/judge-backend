@@ -29,12 +29,24 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="pdflocation" type="varchar(255)">
+            <column name="definition" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="input_def" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="output_def" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="solution_id" type="bigint">
                 <constraints unique="true" nullable="true" />
             </column>
+            <column name="creator_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         

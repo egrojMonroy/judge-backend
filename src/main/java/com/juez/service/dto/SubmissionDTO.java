@@ -23,6 +23,8 @@ public class SubmissionDTO implements Serializable {
 
     private Long problemId;
 
+    private Long submitterId;
+
     public Long getId() {
         return id;
     }
@@ -63,6 +65,14 @@ public class SubmissionDTO implements Serializable {
         this.problemId = problemId;
     }
 
+    public Long getSubmitterId() {
+        return submitterId;
+    }
+
+    public void setSubmitterId(Long userId) {
+        this.submitterId = userId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -89,7 +99,7 @@ public class SubmissionDTO implements Serializable {
         return "SubmissionDTO{" +
             "id=" + getId() +
             ", status='" + getStatus() + "'" +
-            ", runtime='" + getRuntime() + "'" +
+            ", runtime=" + getRuntime() +
             ", language='" + getLanguage() + "'" +
             "}";
     }

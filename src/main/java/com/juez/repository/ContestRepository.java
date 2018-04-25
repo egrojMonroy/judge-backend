@@ -13,10 +13,14 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Repository
 public interface ContestRepository extends JpaRepository<Contest, Long> {
+
+    @Query("select contest from Contest contest where contest.creator.login = ?#{principal.username}")
+    List<Contest> findByCreatorIsCurrentUser();
     @Query("select distinct contest from Contest contest left join fetch contest.problems")
     List<Contest> findAllWithEagerRelationships();
 
     @Query("select contest from Contest contest left join fetch contest.problems where contest.id =:id")
     Contest findOneWithEagerRelationships(@Param("id") Long id);
 
+    Contest findById(Long id);
 }

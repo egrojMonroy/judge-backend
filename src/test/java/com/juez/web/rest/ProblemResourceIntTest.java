@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.juez.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,8 +46,14 @@ public class ProblemResourceIntTest {
     private static final Integer DEFAULT_TIMELIMIT = 1;
     private static final Integer UPDATED_TIMELIMIT = 2;
 
-    private static final String DEFAULT_PDFLOCATION = "AAAAAAAAAA";
-    private static final String UPDATED_PDFLOCATION = "BBBBBBBBBB";
+    private static final String DEFAULT_DEFINITION = "AAAAAAAAAA";
+    private static final String UPDATED_DEFINITION = "BBBBBBBBBB";
+
+    private static final String DEFAULT_INPUT_DEF = "AAAAAAAAAA";
+    private static final String UPDATED_INPUT_DEF = "BBBBBBBBBB";
+
+    private static final String DEFAULT_OUTPUT_DEF = "AAAAAAAAAA";
+    private static final String UPDATED_OUTPUT_DEF = "BBBBBBBBBB";
 
     @Autowired
     private ProblemRepository problemRepository;
@@ -77,6 +84,7 @@ public class ProblemResourceIntTest {
         this.restProblemMockMvc = MockMvcBuilders.standaloneSetup(problemResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -90,7 +98,9 @@ public class ProblemResourceIntTest {
         Problem problem = new Problem()
             .name(DEFAULT_NAME)
             .timelimit(DEFAULT_TIMELIMIT)
-            .pdflocation(DEFAULT_PDFLOCATION);
+            .definition(DEFAULT_DEFINITION)
+            .inputDef(DEFAULT_INPUT_DEF)
+            .outputDef(DEFAULT_OUTPUT_DEF);
         return problem;
     }
 
@@ -117,7 +127,9 @@ public class ProblemResourceIntTest {
         Problem testProblem = problemList.get(problemList.size() - 1);
         assertThat(testProblem.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testProblem.getTimelimit()).isEqualTo(DEFAULT_TIMELIMIT);
-        assertThat(testProblem.getPdflocation()).isEqualTo(DEFAULT_PDFLOCATION);
+        assertThat(testProblem.getDefinition()).isEqualTo(DEFAULT_DEFINITION);
+        assertThat(testProblem.getInputDef()).isEqualTo(DEFAULT_INPUT_DEF);
+        assertThat(testProblem.getOutputDef()).isEqualTo(DEFAULT_OUTPUT_DEF);
     }
 
     @Test
@@ -153,7 +165,9 @@ public class ProblemResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(problem.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].timelimit").value(hasItem(DEFAULT_TIMELIMIT)))
-            .andExpect(jsonPath("$.[*].pdflocation").value(hasItem(DEFAULT_PDFLOCATION.toString())));
+            .andExpect(jsonPath("$.[*].definition").value(hasItem(DEFAULT_DEFINITION.toString())))
+            .andExpect(jsonPath("$.[*].inputDef").value(hasItem(DEFAULT_INPUT_DEF.toString())))
+            .andExpect(jsonPath("$.[*].outputDef").value(hasItem(DEFAULT_OUTPUT_DEF.toString())));
     }
 
     @Test
@@ -169,7 +183,9 @@ public class ProblemResourceIntTest {
             .andExpect(jsonPath("$.id").value(problem.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.timelimit").value(DEFAULT_TIMELIMIT))
-            .andExpect(jsonPath("$.pdflocation").value(DEFAULT_PDFLOCATION.toString()));
+            .andExpect(jsonPath("$.definition").value(DEFAULT_DEFINITION.toString()))
+            .andExpect(jsonPath("$.inputDef").value(DEFAULT_INPUT_DEF.toString()))
+            .andExpect(jsonPath("$.outputDef").value(DEFAULT_OUTPUT_DEF.toString()));
     }
 
     @Test
@@ -189,10 +205,14 @@ public class ProblemResourceIntTest {
 
         // Update the problem
         Problem updatedProblem = problemRepository.findOne(problem.getId());
+        // Disconnect from session so that the updates on updatedProblem are not directly saved in db
+        em.detach(updatedProblem);
         updatedProblem
             .name(UPDATED_NAME)
             .timelimit(UPDATED_TIMELIMIT)
-            .pdflocation(UPDATED_PDFLOCATION);
+            .definition(UPDATED_DEFINITION)
+            .inputDef(UPDATED_INPUT_DEF)
+            .outputDef(UPDATED_OUTPUT_DEF);
         ProblemDTO problemDTO = problemMapper.toDto(updatedProblem);
 
         restProblemMockMvc.perform(put("/api/problems")
@@ -206,7 +226,9 @@ public class ProblemResourceIntTest {
         Problem testProblem = problemList.get(problemList.size() - 1);
         assertThat(testProblem.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProblem.getTimelimit()).isEqualTo(UPDATED_TIMELIMIT);
-        assertThat(testProblem.getPdflocation()).isEqualTo(UPDATED_PDFLOCATION);
+        assertThat(testProblem.getDefinition()).isEqualTo(UPDATED_DEFINITION);
+        assertThat(testProblem.getInputDef()).isEqualTo(UPDATED_INPUT_DEF);
+        assertThat(testProblem.getOutputDef()).isEqualTo(UPDATED_OUTPUT_DEF);
     }
 
     @Test

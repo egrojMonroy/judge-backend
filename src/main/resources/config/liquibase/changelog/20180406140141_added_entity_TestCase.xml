@@ -29,6 +29,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="jhi_show" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
             <column name="problem_id" type="bigint">
                 <constraints nullable="true" />
             </column>

@@ -4,11 +4,11 @@ import com.codahale.metrics.annotation.Timed;
 import com.juez.domain.Problem;
 
 import com.juez.repository.ProblemRepository;
+import com.juez.web.rest.errors.BadRequestAlertException;
 import com.juez.web.rest.util.HeaderUtil;
 import com.juez.web.rest.util.PaginationUtil;
 import com.juez.service.dto.ProblemDTO;
 import com.juez.service.mapper.ProblemMapper;
-import io.swagger.annotations.ApiParam;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +57,7 @@ public class ProblemResource {
     public ResponseEntity<ProblemDTO> createProblem(@RequestBody ProblemDTO problemDTO) throws URISyntaxException {
         log.debug("REST request to save Problem : {}", problemDTO);
         if (problemDTO.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new problem cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new problem cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Problem problem = problemMapper.toEntity(problemDTO);
         problem = problemRepository.save(problem);
@@ -99,7 +99,7 @@ public class ProblemResource {
      */
     @GetMapping("/problems")
     @Timed
-    public ResponseEntity<List<ProblemDTO>> getAllProblems(@ApiParam Pageable pageable) {
+    public ResponseEntity<List<ProblemDTO>> getAllProblems(Pageable pageable) {
         log.debug("REST request to get a page of Problems");
         Page<Problem> page = problemRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/problems");

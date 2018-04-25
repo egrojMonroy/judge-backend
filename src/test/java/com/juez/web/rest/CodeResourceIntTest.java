@@ -30,6 +30,7 @@ import java.time.ZoneId;
 import java.util.List;
 
 import static com.juez.web.rest.TestUtil.sameInstant;
+import static com.juez.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -79,6 +80,7 @@ public class CodeResourceIntTest {
         this.restCodeMockMvc = MockMvcBuilders.standaloneSetup(codeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -187,6 +189,8 @@ public class CodeResourceIntTest {
 
         // Update the code
         Code updatedCode = codeRepository.findOne(code.getId());
+        // Disconnect from session so that the updates on updatedCode are not directly saved in db
+        em.detach(updatedCode);
         updatedCode
             .name(UPDATED_NAME)
             .dateupload(UPDATED_DATEUPLOAD);

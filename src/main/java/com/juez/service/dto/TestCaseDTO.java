@@ -17,6 +17,8 @@ public class TestCaseDTO implements Serializable {
 
     private String outputfl;
 
+    private Boolean show;
+
     private Long problemId;
 
     public Long getId() {
@@ -41,6 +43,14 @@ public class TestCaseDTO implements Serializable {
 
     public void setOutputfl(String outputfl) {
         this.outputfl = outputfl;
+    }
+
+    public Boolean isShow() {
+        return show;
+    }
+
+    public void setShow(Boolean show) {
+        this.show = show;
     }
 
     public Long getProblemId() {
@@ -78,6 +88,7 @@ public class TestCaseDTO implements Serializable {
             "id=" + getId() +
             ", inputfl='" + getInputfl() + "'" +
             ", outputfl='" + getOutputfl() + "'" +
+            ", show='" + isShow() + "'" +
             "}";
     }
 }

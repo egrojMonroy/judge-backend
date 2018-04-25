@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.juez.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -79,6 +80,7 @@ public class SubmissionResourceIntTest {
         this.restSubmissionMockMvc = MockMvcBuilders.standaloneSetup(submissionResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -191,6 +193,8 @@ public class SubmissionResourceIntTest {
 
         // Update the submission
         Submission updatedSubmission = submissionRepository.findOne(submission.getId());
+        // Disconnect from session so that the updates on updatedSubmission are not directly saved in db
+        em.detach(updatedSubmission);
         updatedSubmission
             .status(UPDATED_STATUS)
             .runtime(UPDATED_RUNTIME)

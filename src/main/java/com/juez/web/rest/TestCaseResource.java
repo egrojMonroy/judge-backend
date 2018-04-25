@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.juez.domain.TestCase;
 
 import com.juez.repository.TestCaseRepository;
+import com.juez.web.rest.errors.BadRequestAlertException;
 import com.juez.web.rest.util.HeaderUtil;
 import com.juez.service.dto.TestCaseDTO;
 import com.juez.service.mapper.TestCaseMapper;
@@ -51,7 +52,7 @@ public class TestCaseResource {
     public ResponseEntity<TestCaseDTO> createTestCase(@RequestBody TestCaseDTO testCaseDTO) throws URISyntaxException {
         log.debug("REST request to save TestCase : {}", testCaseDTO);
         if (testCaseDTO.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new testCase cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new testCase cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TestCase testCase = testCaseMapper.toEntity(testCaseDTO);
         testCase = testCaseRepository.save(testCase);

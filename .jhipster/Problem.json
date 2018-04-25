@@ -45,7 +45,15 @@
             "fieldType": "Integer"
         },
         {
-            "fieldName": "pdflocation",
+            "fieldName": "definition",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "inputDef",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "outputDef",
             "fieldType": "String"
         }
     ],

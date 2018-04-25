@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.juez.domain.Coder;
 
 import com.juez.repository.CoderRepository;
+import com.juez.web.rest.errors.BadRequestAlertException;
 import com.juez.web.rest.util.HeaderUtil;
 import com.juez.service.dto.CoderDTO;
 import com.juez.service.mapper.CoderMapper;
@@ -51,7 +52,7 @@ public class CoderResource {
     public ResponseEntity<CoderDTO> createCoder(@RequestBody CoderDTO coderDTO) throws URISyntaxException {
         log.debug("REST request to save Coder : {}", coderDTO);
         if (coderDTO.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new coder cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new coder cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Coder coder = coderMapper.toEntity(coderDTO);
         coder = coderRepository.save(coder);

@@ -16,6 +16,10 @@
         {
             "fieldName": "outputfl",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "show",
+            "fieldType": "Boolean"
         }
     ],
     "changelogDate": "20180406140141",
