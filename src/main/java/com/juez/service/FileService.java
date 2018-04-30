@@ -42,8 +42,9 @@ public class FileService {
                 String line = "";                       
                 while ((line = reader.readLine())!= null) {
                         output.append(line + "\n");
+                        System.out.println("line: "+line);
                 }   
-                System.out.println(output);
+                System.out.println("*******  OUTPUT OF COMMAND  ******** "+output);
                 return output.toString();
         } catch (Throwable t) {
             t.printStackTrace();

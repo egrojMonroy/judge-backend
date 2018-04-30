@@ -19,5 +19,6 @@ import org.springframework.data.domain.Pageable;
 @Repository
 public interface TestCaseRepository extends JpaRepository<TestCase, Long> {
     Page<TestCase> findAllByProblemId(Long id, Pageable pageable);
+    List<TestCase> findAllByProblemId(Long id);
     List<TestCase> findAllByProblemIdAndShow(Long id, Boolean show);
 }

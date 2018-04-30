@@ -6,7 +6,7 @@ using namespace std;
     * American International University - Bangladesh (AIUB)
     *
 */
-
+int main(){
 
     int T,ar[3];
     cin >> T;
@@ -14,7 +14,7 @@ using namespace std;
 
         cin >> ar[0] >> ar[1] >> ar[2];
         sort(ar,ar+3);
-        cout << "Case " << t << ": " << ar[1] << endl;
+        cout << "Case .." << t << ": " << ar[1] << endl;
     }
     return 0;
 }

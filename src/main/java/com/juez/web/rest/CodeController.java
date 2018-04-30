@@ -9,14 +9,19 @@ import com.juez.web.rest.util.HeaderUtil;
 import com.juez.service.dto.CodeDTO;
 import com.juez.service.mapper.CodeMapper;
 import com.juez.service.FileService;
+import com.juez.service.CodeService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.xnio.channels.SuspendableAcceptChannel;
 import org.zalando.problem.spring.web.advice.general.ProblemAdviceTrait;
-
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import com.juez.service.SubmissionService;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,6 +33,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,10 +54,14 @@ public class CodeController {
     private final CodeMapper codeMapper;
 
     private final FileService fileService;
-    public CodeController(CodeRepository codeRepository, CodeMapper codeMapper, FileService fileService) {
+
+    private final CodeService codeService;
+
+    public CodeController(CodeRepository codeRepository, CodeMapper codeMapper, FileService fileService, CodeService codeService) {
         this.codeRepository = codeRepository;
         this.codeMapper = codeMapper;
         this.fileService = fileService;
+        this.codeService = codeService;
     }
 
     /**
@@ -62,115 +73,19 @@ public class CodeController {
      */
     @PostMapping("/create/code")
     @ResponseBody
-    public String createCode(@RequestPart MultipartFile reportFile , @RequestParam String language) throws IOException {
-        String code = "";
-        try { 
-            code = new String(reportFile.getBytes(), "UTF-8");
-            
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-        }
-         System.out.println(code);
-        String userName = "admin";
-        String problemName = "COST";
-        //create dir and return actual dir
-        String actualDir = createDir(userName, problemName, language);
-        System.out.println("The actual Dir is " + actualDir +" 1111111 ");
-        Path path = Paths.get(actualDir);
-
-        String veredict = "In Queue";
-		File f = new File(createFile(code, language, path));
-        if(f.exists() && !f.isDirectory()) { 
-            veredict = runCode(actualDir,language);
-        }
-        // Code code = codeMapper.toEntity(codeDTO);
-        // code = codeRepository.save(code);
-        // CodeDTO result = codeMapper.toDto(code);
-
-        return veredict;
-    }
-    
-    public String createDir(String userName, String problemName, String language) {
-        String currentDir = getCurrentDir();
-        String dirToCreate = currentDir+"/"+userName+"/"+problemName+"/";
-        if(language.equalsIgnoreCase("java")){
-            dirToCreate += "java";
-        } else {
-            dirToCreate += "cpp";
-        }
-        System.out.println("DIR TO CREATE "+dirToCreate);
-        fileService.runScript("mkdir -p "+dirToCreate, "");
-        return  dirToCreate;
-    }
-    public String runCode(String dir, String language) {
-        System.out.println("333333");
+    public ResponseEntity<CodeDTO> createCode(@RequestPart MultipartFile reportFile , @RequestParam String language, @RequestParam String problemId) throws IOException, URISyntaxException {
         
-            //file name  without ext
-            String fileName = "Main";
-            //class name 
-            String compilationName = "Main";
-            //input file name without ext
-            String inputName = getDirInput();
-            //output file name without ext 
-            String outputName = "Name"; 
-            String solutionName = getDirSolution();
-            String veredict = "In Queue";
-            String bashPath = getCurrentDir();
-            System.out.println("Bash Path " + bashPath);
-            if( language.equalsIgnoreCase("java")) { 
-                bashPath += "/utils/compile_java.sh ";
-                veredict = fileService.runScript(bashPath,fileName+" "+compilationName+" "+inputName+" "+outputName +" "+solutionName+" "+dir);
-            } else {
-                bashPath += "/utils/compile_c.sh ";
-                veredict = fileService.runScript(bashPath,fileName+" "+fileName+" "+inputName+" "+outputName+" "+solutionName+" "+dir );
-            }
-            return veredict;
-    
+        CodeDTO result;
+        Code codeFinal = codeService.create(reportFile, language, problemId);
+        result = codeMapper.toDto(codeFinal);
+        return ResponseEntity.created(new URI("/api/codes/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
-    public String getDirSolution() {
-        return "/home/jorge/Desktop/Tests/solutionCostCutting";
-    }
-    public String getDirInput() {
-        return "/home/jorge/Desktop/Tests/Main";
-    }
+   
     public String getCurrentDir() {
         String currentDir = System.getProperty("user.dir");
         return currentDir;
-    }
-
-    // @code is the actual code of the file
-    // @language is the language in witch the code is 
-    // @path is where to create the file 
-    // Returns (String) the complite filepath of the new code created 
-    public String createFile(String code, String language, Path path){
-        System.out.println("222222");
-        String newFileName = "Main";
-        String filePath = "";
-        try {
-            FileWriter fw;
-            
-            if(language.equalsIgnoreCase("java")) {
-                filePath = path+"/"+newFileName+".java";
-                fw = new FileWriter(filePath);
-                log.debug("JAVA",filePath);
-            } else {
-                filePath = path+"/"+newFileName+".cpp";
-                fw = new FileWriter(filePath);
-                log.debug("CPP",filePath);
-            }
-            fw.write(code);
-            fw.close();
-          } catch (FileNotFoundException e) {
-            // File not found
-            log.debug("ERROR");
-            e.printStackTrace();
-          } catch (IOException e) {
-            log.debug("EXCEPTOE");
-            // Error when writing to the file
-            e.printStackTrace();
-          }
-        return filePath;
     }
 
 

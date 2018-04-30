@@ -27,6 +27,9 @@ public class Code implements Serializable {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "path")
+    private String path;
+
     @Column(name = "dateupload")
     private ZonedDateTime dateupload;
 
@@ -54,6 +57,19 @@ public class Code implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public Code path(String path) {
+        this.path = path;
+        return this;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public ZonedDateTime getDateupload() {
@@ -108,6 +124,7 @@ public class Code implements Serializable {
         return "Code{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", path='" + getPath() + "'" +
             ", dateupload='" + getDateupload() + "'" +
             "}";
     }

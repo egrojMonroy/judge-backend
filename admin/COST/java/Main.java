@@ -18,7 +18,7 @@ import java.util.Scanner;
                 if (a > b) {  
                      if (b > c) {  
                           System.out.println(b); 
-				System.out.println(' ');	 
+				System.out.println('A');	 
                           continue;  
                      }  
                      if (a > c) {  

@@ -25,6 +25,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="path" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="dateupload" type="timestamp">
                 <constraints nullable="true" />
             </column>

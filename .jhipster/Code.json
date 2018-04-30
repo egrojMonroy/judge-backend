@@ -16,6 +16,10 @@
             "fieldType": "String"
         },
         {
+            "fieldName": "path",
+            "fieldType": "String"
+        },
+        {
             "fieldName": "dateupload",
             "fieldType": "ZonedDateTime"
         }
@@ -25,5 +29,6 @@
     "dto": "mapstruct",
     "pagination": "no",
     "service": "no",
+    "jpaMetamodelFiltering": false,
     "angularJSSuffix": "mySuffix"
 }

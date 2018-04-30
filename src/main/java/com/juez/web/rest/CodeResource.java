@@ -4,7 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.juez.domain.Code;
 
 import com.juez.repository.CodeRepository;
-import com.juez.web.rest.errors.*;
+import com.juez.web.rest.errors.BadRequestAlertException;
 import com.juez.web.rest.util.HeaderUtil;
 import com.juez.service.dto.CodeDTO;
 import com.juez.service.mapper.CodeMapper;

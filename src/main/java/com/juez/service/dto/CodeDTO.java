@@ -16,6 +16,8 @@ public class CodeDTO implements Serializable {
 
     private String name;
 
+    private String path;
+
     private ZonedDateTime dateupload;
 
     private Long submissionId;
@@ -34,6 +36,14 @@ public class CodeDTO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public ZonedDateTime getDateupload() {
@@ -78,6 +88,7 @@ public class CodeDTO implements Serializable {
         return "CodeDTO{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", path='" + getPath() + "'" +
             ", dateupload='" + getDateupload() + "'" +
             "}";
     }

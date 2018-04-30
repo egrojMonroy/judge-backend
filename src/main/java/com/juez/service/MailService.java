@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Proxy;
 
 import javax.mail.internet.MimeMessage;
 import java.util.Locale;
@@ -25,6 +26,7 @@ import java.util.Locale;
  * We use the @Async annotation to send emails asynchronously.
  */
 @Service
+@Proxy(lazy=false)
 public class MailService {
 
     private final Logger log = LoggerFactory.getLogger(MailService.class);

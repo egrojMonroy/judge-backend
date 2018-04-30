@@ -48,6 +48,9 @@ public class CodeResourceIntTest {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
+    private static final String DEFAULT_PATH = "AAAAAAAAAA";
+    private static final String UPDATED_PATH = "BBBBBBBBBB";
+
     private static final ZonedDateTime DEFAULT_DATEUPLOAD = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_DATEUPLOAD = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
@@ -93,6 +96,7 @@ public class CodeResourceIntTest {
     public static Code createEntity(EntityManager em) {
         Code code = new Code()
             .name(DEFAULT_NAME)
+            .path(DEFAULT_PATH)
             .dateupload(DEFAULT_DATEUPLOAD);
         return code;
     }
@@ -119,6 +123,7 @@ public class CodeResourceIntTest {
         assertThat(codeList).hasSize(databaseSizeBeforeCreate + 1);
         Code testCode = codeList.get(codeList.size() - 1);
         assertThat(testCode.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testCode.getPath()).isEqualTo(DEFAULT_PATH);
         assertThat(testCode.getDateupload()).isEqualTo(DEFAULT_DATEUPLOAD);
     }
 
@@ -154,6 +159,7 @@ public class CodeResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(code.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
+            .andExpect(jsonPath("$.[*].path").value(hasItem(DEFAULT_PATH.toString())))
             .andExpect(jsonPath("$.[*].dateupload").value(hasItem(sameInstant(DEFAULT_DATEUPLOAD))));
     }
 
@@ -169,6 +175,7 @@ public class CodeResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(code.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
+            .andExpect(jsonPath("$.path").value(DEFAULT_PATH.toString()))
             .andExpect(jsonPath("$.dateupload").value(sameInstant(DEFAULT_DATEUPLOAD)));
     }
 
@@ -193,6 +200,7 @@ public class CodeResourceIntTest {
         em.detach(updatedCode);
         updatedCode
             .name(UPDATED_NAME)
+            .path(UPDATED_PATH)
             .dateupload(UPDATED_DATEUPLOAD);
         CodeDTO codeDTO = codeMapper.toDto(updatedCode);
 
@@ -206,6 +214,7 @@ public class CodeResourceIntTest {
         assertThat(codeList).hasSize(databaseSizeBeforeUpdate);
         Code testCode = codeList.get(codeList.size() - 1);
         assertThat(testCode.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testCode.getPath()).isEqualTo(UPDATED_PATH);
         assertThat(testCode.getDateupload()).isEqualTo(UPDATED_DATEUPLOAD);
     }
 
