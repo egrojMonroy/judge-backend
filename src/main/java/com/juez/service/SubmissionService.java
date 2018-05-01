@@ -1,9 +1,14 @@
 package com.juez.service;
 
 import com.juez.domain.Code;
+import com.juez.domain.Problem;
+import com.juez.domain.Submission;
 import com.juez.domain.TestCase;
 import com.juez.domain.User;
+import com.juez.domain.enumeration.Language;
+import com.juez.domain.enumeration.Veredict;
 import com.juez.repository.SubmissionRepository;
+import com.juez.repository.UserRepository;
 
 import io.github.jhipster.config.JHipsterProperties;
 
@@ -21,13 +26,19 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Proxy;
 
 import com.juez.repository.CodeRepository;
+import com.juez.repository.ProblemRepository;
+
 import javax.mail.internet.MimeMessage;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
+
 import com.juez.service.TestCaseService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import com.juez.repository.ProblemRepository;
+import com.juez.repository.UserRepository;
 /**
  * Service for sending emails.
  * <p>
@@ -42,16 +53,22 @@ public class SubmissionService {
     private final FileService fileService;
     private final CodeRepository codeRepository;
     private final TestCaseService testCaseService; 
+    private final ProblemRepository problemRepository;
+    private final UserRepository userRepository;
     public SubmissionService (
         SubmissionRepository submissionRepository, 
         FileService fileService,
         CodeRepository codeRepository,
-        TestCaseService testCaseService
+        TestCaseService testCaseService,
+        ProblemRepository problemRepository,
+        UserRepository userRepository
         ) {
         this.submissionRepository = submissionRepository;
         this.fileService = fileService;
         this.codeRepository = codeRepository;
         this.testCaseService = testCaseService;
+        this.problemRepository = problemRepository;
+        this.userRepository = userRepository;
     }
     private String currentDir; 
     public String getCurrentDir() {
@@ -113,22 +130,50 @@ public class SubmissionService {
             }
             System.out.println(veredict);
             System.out.println("**********************************************************************************");
-            System.out.println("****************************w*****w***a*******************************************");
-            System.out.println("*****************************w***w***a*a******************************************");
-            System.out.println("******************************w*w***a***a*****************************************");
-            System.out.println("*******************************w***a*****a****************************************");
-            System.out.println("**********************************************************************************");
+            System.out.println("************A*******C*******w*****w***a*******************************************");
+            System.out.println("*************N*****F*O*******w***w***a*a******************************************");
+            System.out.println("**************S***O***D*******w*w***a***a*****************************************");
+            System.out.println("***************W*R*****E*******w***a*****a****************************************");
+            System.out.println("****************E*****************************************************************");
             System.out.println(ac+"  -  "+wa);
             if( wa>0 ) {
                 veredict = "Wrong answer";
             } 
             System.out.println(veredict);
             System.out.println("************************************");
+            Submission submission = new Submission();
+            Language lang = null;
+            if(language.equalsIgnoreCase("java")){
+                lang = lang.JAVA;
+            } else {
+                lang = lang.C;
+            }
+            Veredict ver = null; 
+            if( veredict.toString().contains("Accepted")){
+                ver = ver.ACCEPTED;
+            } else { 
+                ver = ver.WRONG_ANSWER;
+            }
+            submission.setLanguage(lang);
+            submission.setProblem(getProblem(problemId));
+            submission.setStatus(ver);
+            Optional<User> user = userRepository.findOneByLogin(userName);
+            if(user.isPresent()) {
+                submission.setSubmitter(user.get());
+            }
+            
+            submissionRepository.save(submission);
+            code.setSubmission(submission);
+            codeRepository.save(code);
             
     }
     public Code getCode(Long id){
-        Code code = codeRepository.getOne(id);
+        Code code = codeRepository.findById(id);
         return code;
+    }
+    public Problem getProblem(Long id ) {
+        Problem problem = problemRepository.findById(id);
+        return problem;
     }
     public String getDirSolution() {
         return "/home/jorge/Desktop/Tests/solutionCostCutting";

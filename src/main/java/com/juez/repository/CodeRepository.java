@@ -12,5 +12,5 @@ import org.springframework.data.jpa.repository.*;
 @SuppressWarnings("unused")
 @Repository
 public interface CodeRepository extends JpaRepository<Code, Long> {
-
+    Code findById(Long id);
 }
