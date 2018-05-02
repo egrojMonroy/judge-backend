@@ -1,6 +1,7 @@
 package com.juez.service.dto;
 
 
+import java.time.ZonedDateTime;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +21,8 @@ public class SubmissionDTO implements Serializable {
     private Integer runtime;
 
     private Language language;
+
+    private ZonedDateTime dateupload;
 
     private Long submitterId;
 
@@ -55,6 +58,14 @@ public class SubmissionDTO implements Serializable {
 
     public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    public ZonedDateTime getDateupload() {
+        return dateupload;
+    }
+
+    public void setDateupload(ZonedDateTime dateupload) {
+        this.dateupload = dateupload;
     }
 
     public Long getSubmitterId() {
@@ -101,6 +112,7 @@ public class SubmissionDTO implements Serializable {
             ", status='" + getStatus() + "'" +
             ", runtime=" + getRuntime() +
             ", language='" + getLanguage() + "'" +
+            ", dateupload='" + getDateupload() + "'" +
             "}";
     }
 }

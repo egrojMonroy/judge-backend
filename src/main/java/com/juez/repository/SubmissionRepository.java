@@ -2,7 +2,8 @@ package com.juez.repository;
 
 import com.juez.domain.Submission;
 import org.springframework.stereotype.Repository;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import java.util.List;
 
@@ -15,5 +16,8 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
 
     @Query("select submission from Submission submission where submission.submitter.login = ?#{principal.username}")
     List<Submission> findBySubmitterIsCurrentUser();
+    
+    Page<Submission> findAllOrderByDateupload(Pageable pageable);
 
 }
+

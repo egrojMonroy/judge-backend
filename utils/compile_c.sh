@@ -23,7 +23,14 @@ cd $6
 # 4 out name 
 # 5 output
 # 6 filefolder of code and output 
-g++ $1.cpp -o $2 -fno-asm -O2 -Wall -lm --static -std=c++11 -DONLINE_JUDGE && time ./$2 < $3 > $4.out 
+# 7 timelimit
+if ! g++ $1.cpp -o $2 -fno-asm -O2 -Wall -lm --static -std=c++11 -DONLINE_JUDGE; then 
+echo "Compilation Error";
+exit 1;
+fi  
+
+timeout $7s ./$2 < $3 > $4.out   || ( [ $? -eq 124 ] && echo timeout && exit 1) 
+
 
 if ! diff -bwB $5 $4.out &>/dev/null; then
   echo "Wrong answer"

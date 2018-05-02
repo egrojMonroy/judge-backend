@@ -30,6 +30,7 @@ import com.juez.repository.ProblemRepository;
 
 import javax.mail.internet.MimeMessage;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -79,6 +80,7 @@ public class SubmissionService {
             System.out.println("333333 "+ userName+ " " + language);
             currentDir = dir;
             Code actual = code;
+            Problem actualProblem = getProblem(problemId);
             System.out.println(actual.toString());
             //directory of current code | where the compilation and output will be
             // $6 
@@ -118,10 +120,19 @@ public class SubmissionService {
                 String inputName = testPath+tc.getInputfl();
                 String solutionName = testPath+tc.getOutputfl();
                 System.out.println("INPUT 3 "+inputName+ " 4: "+ outputName + " 5:" +solutionName+ " 6:" + codeFolder );
-                veredict = fileService.runScript(bashPath,fileName+" "+compilationName+" "+inputName+" "+outputName +" "+solutionName+" "+codeFolder);
+                veredict = fileService.runScript(bashPath,fileName+" "+compilationName+" "+inputName+" "+outputName +" "+solutionName+" "+codeFolder+" "+actualProblem.getTimelimit());
                 System.out.println("$$$$$$$$$$*********VEREDICT "+veredict);
-                if(veredict.toString().contains("Accepted")){
+                if(veredict.toString().contains("Compilation Error")) {
+                    veredict = "Compilation Error";
+                    wa = 0;
+                    break;
+                }
+                else if(veredict.toString().contains("Accepted")){
                     ac++;
+                } else if( veredict.toString().contains("timeout")) {
+                    veredict = "timeout";
+                    wa = 0;
+                    break;
                 } else {
                     veredict = "Wrong Answer";
                     wa++;
@@ -136,7 +147,7 @@ public class SubmissionService {
             System.out.println("***************W*R*****E*******w***a*****a****************************************");
             System.out.println("****************E*****************************************************************");
             System.out.println(ac+"  -  "+wa);
-            if( wa>0 ) {
+            if( wa>0 && !veredict.toString().contains("timeout")) {
                 veredict = "Wrong answer";
             } 
             System.out.println(veredict);
@@ -149,19 +160,24 @@ public class SubmissionService {
                 lang = lang.C;
             }
             Veredict ver = null; 
-            if( veredict.toString().contains("Accepted")){
+            if(veredict.toString().contains("Compilation Error")) { 
+                ver = ver.RUN_TIME_ERROR;
+            } else if( veredict.toString().contains("Accepted")){
                 ver = ver.ACCEPTED;
+            } else if (veredict.toString().contains("timeout") ) {
+                ver = ver.TIME_LIMIT;
             } else { 
                 ver = ver.WRONG_ANSWER;
             }
+            System.out.println(lang + " --- "+problemId + " --- "+ ver.toString());
             submission.setLanguage(lang);
-            submission.setProblem(getProblem(problemId));
+            submission.setProblem(actualProblem);
             submission.setStatus(ver);
             Optional<User> user = userRepository.findOneByLogin(userName);
             if(user.isPresent()) {
                 submission.setSubmitter(user.get());
             }
-            
+            submission.setDateupload(ZonedDateTime.now());
             submissionRepository.save(submission);
             code.setSubmission(submission);
             codeRepository.save(code);

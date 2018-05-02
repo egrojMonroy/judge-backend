@@ -23,8 +23,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.List;
 
+import static com.juez.web.rest.TestUtil.sameInstant;
 import static com.juez.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -50,6 +55,9 @@ public class SubmissionResourceIntTest {
 
     private static final Language DEFAULT_LANGUAGE = Language.JAVA;
     private static final Language UPDATED_LANGUAGE = Language.C;
+
+    private static final ZonedDateTime DEFAULT_DATEUPLOAD = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_DATEUPLOAD = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Autowired
     private SubmissionRepository submissionRepository;
@@ -94,7 +102,8 @@ public class SubmissionResourceIntTest {
         Submission submission = new Submission()
             .status(DEFAULT_STATUS)
             .runtime(DEFAULT_RUNTIME)
-            .language(DEFAULT_LANGUAGE);
+            .language(DEFAULT_LANGUAGE)
+            .dateupload(DEFAULT_DATEUPLOAD);
         return submission;
     }
 
@@ -122,6 +131,7 @@ public class SubmissionResourceIntTest {
         assertThat(testSubmission.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testSubmission.getRuntime()).isEqualTo(DEFAULT_RUNTIME);
         assertThat(testSubmission.getLanguage()).isEqualTo(DEFAULT_LANGUAGE);
+        assertThat(testSubmission.getDateupload()).isEqualTo(DEFAULT_DATEUPLOAD);
     }
 
     @Test
@@ -157,7 +167,8 @@ public class SubmissionResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(submission.getId().intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].runtime").value(hasItem(DEFAULT_RUNTIME)))
-            .andExpect(jsonPath("$.[*].language").value(hasItem(DEFAULT_LANGUAGE.toString())));
+            .andExpect(jsonPath("$.[*].language").value(hasItem(DEFAULT_LANGUAGE.toString())))
+            .andExpect(jsonPath("$.[*].dateupload").value(hasItem(sameInstant(DEFAULT_DATEUPLOAD))));
     }
 
     @Test
@@ -173,7 +184,8 @@ public class SubmissionResourceIntTest {
             .andExpect(jsonPath("$.id").value(submission.getId().intValue()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.runtime").value(DEFAULT_RUNTIME))
-            .andExpect(jsonPath("$.language").value(DEFAULT_LANGUAGE.toString()));
+            .andExpect(jsonPath("$.language").value(DEFAULT_LANGUAGE.toString()))
+            .andExpect(jsonPath("$.dateupload").value(sameInstant(DEFAULT_DATEUPLOAD)));
     }
 
     @Test
@@ -198,7 +210,8 @@ public class SubmissionResourceIntTest {
         updatedSubmission
             .status(UPDATED_STATUS)
             .runtime(UPDATED_RUNTIME)
-            .language(UPDATED_LANGUAGE);
+            .language(UPDATED_LANGUAGE)
+            .dateupload(UPDATED_DATEUPLOAD);
         SubmissionDTO submissionDTO = submissionMapper.toDto(updatedSubmission);
 
         restSubmissionMockMvc.perform(put("/api/submissions")
@@ -213,6 +226,7 @@ public class SubmissionResourceIntTest {
         assertThat(testSubmission.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testSubmission.getRuntime()).isEqualTo(UPDATED_RUNTIME);
         assertThat(testSubmission.getLanguage()).isEqualTo(UPDATED_LANGUAGE);
+        assertThat(testSubmission.getDateupload()).isEqualTo(UPDATED_DATEUPLOAD);
     }
 
     @Test

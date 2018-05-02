@@ -16,7 +16,6 @@ import com.juez.service.FileService;
 import com.juez.domain.Code;
 import com.juez.domain.Submission;
 import com.juez.repository.CodeRepository;
-import com.juez.repository.SubmissionRepository;
 import com.juez.service.dto.CodeDTO;
 import com.juez.service.mapper.CodeMapper;
 import org.springframework.security.core.Authentication;
@@ -41,20 +40,18 @@ public class CodeService {
     private final Logger log = LoggerFactory.getLogger(CodeService.class);;
     private final CodeRepository codeRepository;
     private final CodeMapper codeMapper;
-    private final SubmissionRepository submissionRepository;
+    
     private final FileService fileService;
     private final SubmissionService submissionService;
     public CodeService (
         CodeRepository codeRepository, 
         CodeMapper codeMapper, 
         FileService fileService, 
-        SubmissionRepository submissionRepository,
         SubmissionService submissionService
         ) {
         this.codeRepository = codeRepository;
         this.codeMapper = codeMapper;
         this.fileService = fileService;
-        this.submissionRepository = submissionRepository;
         this.submissionService = submissionService;
     }
     /**

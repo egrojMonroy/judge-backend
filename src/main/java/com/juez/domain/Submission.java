@@ -6,6 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 import com.juez.domain.enumeration.Veredict;
@@ -37,6 +38,9 @@ public class Submission implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "language")
     private Language language;
+
+    @Column(name = "dateupload")
+    private ZonedDateTime dateupload;
 
     @ManyToOne
     private User submitter;
@@ -90,6 +94,19 @@ public class Submission implements Serializable {
 
     public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    public ZonedDateTime getDateupload() {
+        return dateupload;
+    }
+
+    public Submission dateupload(ZonedDateTime dateupload) {
+        this.dateupload = dateupload;
+        return this;
+    }
+
+    public void setDateupload(ZonedDateTime dateupload) {
+        this.dateupload = dateupload;
     }
 
     public User getSubmitter() {
@@ -146,6 +163,7 @@ public class Submission implements Serializable {
             ", status='" + getStatus() + "'" +
             ", runtime=" + getRuntime() +
             ", language='" + getLanguage() + "'" +
+            ", dateupload='" + getDateupload() + "'" +
             "}";
     }
 }
