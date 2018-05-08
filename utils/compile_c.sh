@@ -9,7 +9,7 @@ set -e
 STEPS=$(dirname $(realpath $0))
 
 # Limit task memory usage to 4GB (better to fail than be slowed by heavy swapping).
-ulimit   -v800000
+ulimit   -v80000000
 
     #echo "running steps from $STEPS"
     #echo
@@ -29,7 +29,8 @@ echo "Compilation Error";
 exit 1;
 fi  
 
-timeout $7s ./$2 < $3 > $4.out   || ( [ $? -eq 124 ] && echo timeout && exit 1) 
+(timeout $7s ./$2 < $3 > $4.out   || ( [ $? -eq 124 ] && echo timeout && exit 1) ) || (echo runtime && exit 1)
+
 
 
 if ! diff -bwB $5 $4.out &>/dev/null; then

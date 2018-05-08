@@ -18,6 +18,8 @@ public class ProblemDTO implements Serializable {
 
     private Integer timelimit;
 
+    private Integer level;
+
     @Size(max = 3000)
     private String definition;
 
@@ -53,6 +55,14 @@ public class ProblemDTO implements Serializable {
 
     public void setTimelimit(Integer timelimit) {
         this.timelimit = timelimit;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 
     public String getDefinition() {
@@ -122,6 +132,7 @@ public class ProblemDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", timelimit=" + getTimelimit() +
+            ", level=" + getLevel() +
             ", definition='" + getDefinition() + "'" +
             ", inputDef='" + getInputDef() + "'" +
             ", outputDef='" + getOutputDef() + "'" +

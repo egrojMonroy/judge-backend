@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.juez.domain.Contest;
 import com.juez.domain.Problem;
 import com.juez.repository.ContestRepository;
+import com.juez.repository.ProblemRepository;
 import com.juez.web.rest.errors.BadRequestAlertException;
 import com.juez.web.rest.util.HeaderUtil;
 import com.juez.web.rest.util.PaginationUtil;
@@ -11,7 +12,7 @@ import com.juez.service.dto.ContestDTO;
 import com.juez.service.dto.ProblemDTO;
 import com.juez.service.mapper.ContestMapper;
 import com.juez.service.mapper.ProblemMapper;
-
+import com.juez.service.ContestService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.juez.repository.ProblemRepository;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -43,11 +45,19 @@ public class ContestController {
     private final ProblemMapper problemMapper;
 
     private final ContestMapper contestMapper;
-
-    public ContestController(ContestRepository contestRepository, ContestMapper contestMapper, ProblemMapper problemMapper ) {
+    private final ProblemRepository problemRepository;
+    private final ContestService contestService;
+    public ContestController(
+        ContestRepository contestRepository, 
+        ContestMapper contestMapper, 
+        ProblemMapper problemMapper,
+        ProblemRepository problemRepository,
+        ContestService contestService ) {
         this.contestRepository = contestRepository;
         this.contestMapper = contestMapper;
         this.problemMapper = problemMapper;
+        this.problemRepository = problemRepository;
+        this.contestService = contestService;
     }
 
     /**
@@ -59,18 +69,12 @@ public class ContestController {
      */
     @PostMapping("/contests/add-problem")
     @Timed
-    public ResponseEntity<ContestDTO> addProblem(@RequestBody ProblemDTO problemDTO, @RequestParam Long contestId ) throws URISyntaxException {
-        log.debug("REST request to save Contest : {}", problemDTO);
-   
-        Problem problem = problemMapper.toEntity(problemDTO);
-        Contest contest = contestRepository.findById(contestId);
-        contest.addProblem(problem);
-        contest = contestRepository.save(contest);
-        ContestDTO result = contestMapper.toDto(contest);
+    public String addProblems(@RequestParam Long problemId, @RequestParam Long contestId ) throws URISyntaxException {
+        log.debug("REST request to save Contest : {}", problemId, contestId);
+       
+        contestService.addProblems(contestId, problemId);
         
-        return ResponseEntity.created(new URI("/api/contests/add-problem" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        return "555";
     }
 
 }

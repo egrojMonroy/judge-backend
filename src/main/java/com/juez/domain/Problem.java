@@ -33,6 +33,9 @@ public class Problem implements Serializable {
     @Column(name = "timelimit")
     private Integer timelimit;
 
+    @Column(name = "jhi_level")
+    private Integer level;
+
     @Size(max = 3000)
     @Column(name = "definition", length = 3000)
     private String definition;
@@ -100,6 +103,19 @@ public class Problem implements Serializable {
 
     public void setTimelimit(Integer timelimit) {
         this.timelimit = timelimit;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public Problem level(Integer level) {
+        this.level = level;
+        return this;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 
     public String getDefinition() {
@@ -269,6 +285,7 @@ public class Problem implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", timelimit=" + getTimelimit() +
+            ", level=" + getLevel() +
             ", definition='" + getDefinition() + "'" +
             ", inputDef='" + getInputDef() + "'" +
             ", outputDef='" + getOutputDef() + "'" +

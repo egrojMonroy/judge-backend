@@ -46,6 +46,9 @@ public class ProblemResourceIntTest {
     private static final Integer DEFAULT_TIMELIMIT = 1;
     private static final Integer UPDATED_TIMELIMIT = 2;
 
+    private static final Integer DEFAULT_LEVEL = 1;
+    private static final Integer UPDATED_LEVEL = 2;
+
     private static final String DEFAULT_DEFINITION = "AAAAAAAAAA";
     private static final String UPDATED_DEFINITION = "BBBBBBBBBB";
 
@@ -98,6 +101,7 @@ public class ProblemResourceIntTest {
         Problem problem = new Problem()
             .name(DEFAULT_NAME)
             .timelimit(DEFAULT_TIMELIMIT)
+            .level(DEFAULT_LEVEL)
             .definition(DEFAULT_DEFINITION)
             .inputDef(DEFAULT_INPUT_DEF)
             .outputDef(DEFAULT_OUTPUT_DEF);
@@ -127,6 +131,7 @@ public class ProblemResourceIntTest {
         Problem testProblem = problemList.get(problemList.size() - 1);
         assertThat(testProblem.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testProblem.getTimelimit()).isEqualTo(DEFAULT_TIMELIMIT);
+        assertThat(testProblem.getLevel()).isEqualTo(DEFAULT_LEVEL);
         assertThat(testProblem.getDefinition()).isEqualTo(DEFAULT_DEFINITION);
         assertThat(testProblem.getInputDef()).isEqualTo(DEFAULT_INPUT_DEF);
         assertThat(testProblem.getOutputDef()).isEqualTo(DEFAULT_OUTPUT_DEF);
@@ -165,6 +170,7 @@ public class ProblemResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(problem.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].timelimit").value(hasItem(DEFAULT_TIMELIMIT)))
+            .andExpect(jsonPath("$.[*].level").value(hasItem(DEFAULT_LEVEL)))
             .andExpect(jsonPath("$.[*].definition").value(hasItem(DEFAULT_DEFINITION.toString())))
             .andExpect(jsonPath("$.[*].inputDef").value(hasItem(DEFAULT_INPUT_DEF.toString())))
             .andExpect(jsonPath("$.[*].outputDef").value(hasItem(DEFAULT_OUTPUT_DEF.toString())));
@@ -183,6 +189,7 @@ public class ProblemResourceIntTest {
             .andExpect(jsonPath("$.id").value(problem.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.timelimit").value(DEFAULT_TIMELIMIT))
+            .andExpect(jsonPath("$.level").value(DEFAULT_LEVEL))
             .andExpect(jsonPath("$.definition").value(DEFAULT_DEFINITION.toString()))
             .andExpect(jsonPath("$.inputDef").value(DEFAULT_INPUT_DEF.toString()))
             .andExpect(jsonPath("$.outputDef").value(DEFAULT_OUTPUT_DEF.toString()));
@@ -210,6 +217,7 @@ public class ProblemResourceIntTest {
         updatedProblem
             .name(UPDATED_NAME)
             .timelimit(UPDATED_TIMELIMIT)
+            .level(UPDATED_LEVEL)
             .definition(UPDATED_DEFINITION)
             .inputDef(UPDATED_INPUT_DEF)
             .outputDef(UPDATED_OUTPUT_DEF);
@@ -226,6 +234,7 @@ public class ProblemResourceIntTest {
         Problem testProblem = problemList.get(problemList.size() - 1);
         assertThat(testProblem.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProblem.getTimelimit()).isEqualTo(UPDATED_TIMELIMIT);
+        assertThat(testProblem.getLevel()).isEqualTo(UPDATED_LEVEL);
         assertThat(testProblem.getDefinition()).isEqualTo(UPDATED_DEFINITION);
         assertThat(testProblem.getInputDef()).isEqualTo(UPDATED_INPUT_DEF);
         assertThat(testProblem.getOutputDef()).isEqualTo(UPDATED_OUTPUT_DEF);

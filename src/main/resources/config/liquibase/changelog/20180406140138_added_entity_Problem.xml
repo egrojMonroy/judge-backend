@@ -29,6 +29,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="jhi_level" type="integer">
+                <constraints nullable="true" />
+            </column>
+
             <column name="definition" type="varchar(3000)">
                 <constraints nullable="true" />
             </column>

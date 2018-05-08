@@ -109,7 +109,7 @@ public class CodeService {
 
     public String createDir(String userName, String problemName, String language) {
         String currentDir = getCurrentDir();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
         Date date = new Date();        
         String dirToCreate = currentDir+"/code/"+userName+"/"+problemName+"/";
         if(language.equalsIgnoreCase("java")){

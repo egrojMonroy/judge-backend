@@ -25,7 +25,7 @@ echo "Compilation Error";
 exit 1;
 fi  
 
-timeout $7s java $2 < $3 > $4.out  || ( [ $? -eq 124 ] && echo timeout && exit 1)
+(timeout $7s java $2 < $3 > $4.out  || ( [ $? -eq 124 ] && echo timeout && exit 1)) || (echo runtime && exit 1)
 
 if ! diff -bwB $5 $4.out &>/dev/null; then
   echo "Wrong answer"

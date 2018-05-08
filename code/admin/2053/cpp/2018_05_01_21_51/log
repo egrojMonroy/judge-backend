@@ -1,2 +1,0 @@
-timeout: the monitored command dumped core
-/home/jorge/src/judge-backend/utils/compile_c.sh: line 32:  7597 Floating point exceptiontimeout $7s ./$2 < $3 > $4.out

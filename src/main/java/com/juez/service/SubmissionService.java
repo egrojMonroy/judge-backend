@@ -126,12 +126,14 @@ public class SubmissionService {
                     veredict = "Compilation Error";
                     wa = 0;
                     break;
-                }
-                else if(veredict.toString().contains("Accepted")){
+                } else if(veredict.toString().contains("Accepted")){
                     ac++;
                 } else if( veredict.toString().contains("timeout")) {
                     veredict = "timeout";
                     wa = 0;
+                    break;
+                }else if (veredict.toString().contains("runtime") ) {
+                    veredict = "runtime";
                     break;
                 } else {
                     veredict = "Wrong Answer";
@@ -147,9 +149,9 @@ public class SubmissionService {
             System.out.println("***************W*R*****E*******w***a*****a****************************************");
             System.out.println("****************E*****************************************************************");
             System.out.println(ac+"  -  "+wa);
-            if( wa>0 && !veredict.toString().contains("timeout")) {
-                veredict = "Wrong answer";
-            } 
+            // if( wa>0 && !veredict.toString().contains("timeout")) {
+            //     veredict = "Wrong answer";
+            // } 
             System.out.println(veredict);
             System.out.println("************************************");
             Submission submission = new Submission();
@@ -161,11 +163,13 @@ public class SubmissionService {
             }
             Veredict ver = null; 
             if(veredict.toString().contains("Compilation Error")) { 
-                ver = ver.RUN_TIME_ERROR;
+                ver = ver.COMPILATION_ERROR;
             } else if( veredict.toString().contains("Accepted")){
                 ver = ver.ACCEPTED;
             } else if (veredict.toString().contains("timeout") ) {
                 ver = ver.TIME_LIMIT;
+            } else if (veredict.toString().contains("runtime") ) {
+                ver = ver.RUN_TIME_ERROR;
             } else { 
                 ver = ver.WRONG_ANSWER;
             }

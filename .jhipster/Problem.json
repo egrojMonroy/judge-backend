@@ -45,6 +45,10 @@
             "fieldType": "Integer"
         },
         {
+            "fieldName": "level",
+            "fieldType": "Integer"
+        },
+        {
             "fieldName": "definition",
             "fieldType": "String",
             "fieldValidateRules": [
