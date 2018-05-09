@@ -1,73 +1,88 @@
 package com.juez.service;
 
-import org.apache.commons.lang3.text.translate.CodePointTranslator;
+import com.juez.domain.Contest;
+import com.juez.domain.User;
+import com.juez.repository.ContestRepository;
+import com.juez.service.dto.ContestDTO;
+import com.juez.service.mapper.ContestMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.juez.repository.ProblemRepository;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import com.juez.service.FileService;
-import com.juez.domain.Code;
-import com.juez.domain.Contest;
-import com.juez.domain.Problem;
-import com.juez.domain.Submission;
-import com.juez.repository.ContestRepository;
-import com.juez.service.dto.CodeDTO;
-import com.juez.service.mapper.ContestMapper;
-import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
-import com.juez.service.SubmissionService;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.Set;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+
+/**
+ * Service Implementation for managing Contest.
+ */
 @Service
-@EnableAsync
+@Transactional
 public class ContestService {
 
-    private final Logger log = LoggerFactory.getLogger(ContestService.class);;
+    private final Logger log = LoggerFactory.getLogger(ContestService.class);
+
     private final ContestRepository contestRepository;
+
     private final ContestMapper contestMapper;
-    
-    private final FileService fileService;
-    private final SubmissionService submissionService;
-    private final ProblemRepository problemRepository;
-    public ContestService (
+    private final UserService userService;
+    public ContestService(
         ContestRepository contestRepository, 
-        ContestMapper contestMapper, 
-        FileService fileService, 
-        SubmissionService submissionService,
-        ProblemRepository problemRepository
-        ) {
+        ContestMapper contestMapper,
+        UserService userService) {
         this.contestRepository = contestRepository;
         this.contestMapper = contestMapper;
-        this.fileService = fileService;
-        this.submissionService = submissionService;
-        this.problemRepository = problemRepository;
+        this.userService = userService;
     }
-    
-    public Contest addProblems (Long contestId, Long problemId) {
-        System.out.println("ADD PROBLEMS TO CONTEST "+contestId+":"+problemId);
-        Problem problem = problemRepository.findById(problemId);
-        Contest contest = contestRepository.findById(contestId);
-        problem.addContest(contest);
-        contest.addProblem(problem);
-        return contest;
+
+    /**
+     * Save a contest.
+     *
+     * @param contestDTO the entity to save
+     * @return the persisted entity
+     */
+    public ContestDTO save(ContestDTO contestDTO) {
+        log.debug("Request to save Contest : {}", contestDTO);
+        Contest contest = contestMapper.toEntity(contestDTO);
+        contest.setCreator((User) userService.getUserWithAuthorities());
+        contest = contestRepository.save(contest);
+        return contestMapper.toDto(contest);
+    }
+
+    /**
+     * Get all the contests.
+     *
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public Page<ContestDTO> findAll(Pageable pageable) {
+        log.debug("Request to get all Contests");
+        return contestRepository.findAll(pageable)
+            .map(contestMapper::toDto);
+    }
+
+    /**
+     * Get one contest by id.
+     *
+     * @param id the id of the entity
+     * @return the entity
+     */
+    @Transactional(readOnly = true)
+    public ContestDTO findOne(Long id) {
+        log.debug("Request to get Contest : {}", id);
+        Contest contest = contestRepository.findOneWithEagerRelationships(id);
+        return contestMapper.toDto(contest);
+    }
+
+    /**
+     * Delete the contest by id.
+     *
+     * @param id the id of the entity
+     */
+    public void delete(Long id) {
+        log.debug("Request to delete Contest : {}", id);
+        contestRepository.delete(id);
     }
 }

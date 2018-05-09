@@ -1,16 +1,18 @@
 package com.juez.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.juez.domain.Code;
-
-import com.juez.repository.CodeRepository;
+import com.juez.service.CodeService;
 import com.juez.web.rest.errors.BadRequestAlertException;
 import com.juez.web.rest.util.HeaderUtil;
+import com.juez.web.rest.util.PaginationUtil;
 import com.juez.service.dto.CodeDTO;
-import com.juez.service.mapper.CodeMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,13 +33,10 @@ public class CodeResource {
 
     private static final String ENTITY_NAME = "code";
 
-    private final CodeRepository codeRepository;
+    private final CodeService codeService;
 
-    private final CodeMapper codeMapper;
-
-    public CodeResource(CodeRepository codeRepository, CodeMapper codeMapper) {
-        this.codeRepository = codeRepository;
-        this.codeMapper = codeMapper;
+    public CodeResource(CodeService codeService) {
+        this.codeService = codeService;
     }
 
     /**
@@ -54,9 +53,7 @@ public class CodeResource {
         if (codeDTO.getId() != null) {
             throw new BadRequestAlertException("A new code cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Code code = codeMapper.toEntity(codeDTO);
-        code = codeRepository.save(code);
-        CodeDTO result = codeMapper.toDto(code);
+        CodeDTO result = codeService.save(codeDTO);
         return ResponseEntity.created(new URI("/api/codes/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -78,9 +75,7 @@ public class CodeResource {
         if (codeDTO.getId() == null) {
             return createCode(codeDTO);
         }
-        Code code = codeMapper.toEntity(codeDTO);
-        code = codeRepository.save(code);
-        CodeDTO result = codeMapper.toDto(code);
+        CodeDTO result = codeService.save(codeDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, codeDTO.getId().toString()))
             .body(result);
@@ -89,15 +84,17 @@ public class CodeResource {
     /**
      * GET  /codes : get all the codes.
      *
+     * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of codes in body
      */
     @GetMapping("/codes")
     @Timed
-    public List<CodeDTO> getAllCodes() {
-        log.debug("REST request to get all Codes");
-        List<Code> codes = codeRepository.findAll();
-        return codeMapper.toDto(codes);
-        }
+    public ResponseEntity<List<CodeDTO>> getAllCodes(Pageable pageable) {
+        log.debug("REST request to get a page of Codes");
+        Page<CodeDTO> page = codeService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/codes");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
 
     /**
      * GET  /codes/:id : get the "id" code.
@@ -109,8 +106,7 @@ public class CodeResource {
     @Timed
     public ResponseEntity<CodeDTO> getCode(@PathVariable Long id) {
         log.debug("REST request to get Code : {}", id);
-        Code code = codeRepository.findOne(id);
-        CodeDTO codeDTO = codeMapper.toDto(code);
+        CodeDTO codeDTO = codeService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(codeDTO));
     }
 
@@ -124,7 +120,7 @@ public class CodeResource {
     @Timed
     public ResponseEntity<Void> deleteCode(@PathVariable Long id) {
         log.debug("REST request to delete Code : {}", id);
-        codeRepository.delete(id);
+        codeService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

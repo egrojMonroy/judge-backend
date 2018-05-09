@@ -1,14 +1,11 @@
 package com.juez.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.juez.domain.Contest;
-
-import com.juez.repository.ContestRepository;
+import com.juez.service.ContestService;
 import com.juez.web.rest.errors.BadRequestAlertException;
 import com.juez.web.rest.util.HeaderUtil;
 import com.juez.web.rest.util.PaginationUtil;
 import com.juez.service.dto.ContestDTO;
-import com.juez.service.mapper.ContestMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,13 +33,10 @@ public class ContestResource {
 
     private static final String ENTITY_NAME = "contest";
 
-    private final ContestRepository contestRepository;
+    private final ContestService contestService;
 
-    private final ContestMapper contestMapper;
-
-    public ContestResource(ContestRepository contestRepository, ContestMapper contestMapper) {
-        this.contestRepository = contestRepository;
-        this.contestMapper = contestMapper;
+    public ContestResource(ContestService contestService) {
+        this.contestService = contestService;
     }
 
     /**
@@ -59,9 +53,7 @@ public class ContestResource {
         if (contestDTO.getId() != null) {
             throw new BadRequestAlertException("A new contest cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Contest contest = contestMapper.toEntity(contestDTO);
-        contest = contestRepository.save(contest);
-        ContestDTO result = contestMapper.toDto(contest);
+        ContestDTO result = contestService.save(contestDTO);
         return ResponseEntity.created(new URI("/api/contests/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -83,9 +75,7 @@ public class ContestResource {
         if (contestDTO.getId() == null) {
             return createContest(contestDTO);
         }
-        Contest contest = contestMapper.toEntity(contestDTO);
-        contest = contestRepository.save(contest);
-        ContestDTO result = contestMapper.toDto(contest);
+        ContestDTO result = contestService.save(contestDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, contestDTO.getId().toString()))
             .body(result);
@@ -101,9 +91,9 @@ public class ContestResource {
     @Timed
     public ResponseEntity<List<ContestDTO>> getAllContests(Pageable pageable) {
         log.debug("REST request to get a page of Contests");
-        Page<Contest> page = contestRepository.findAll(pageable);
+        Page<ContestDTO> page = contestService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/contests");
-        return new ResponseEntity<>(contestMapper.toDto(page.getContent()), headers, HttpStatus.OK);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**
@@ -116,8 +106,7 @@ public class ContestResource {
     @Timed
     public ResponseEntity<ContestDTO> getContest(@PathVariable Long id) {
         log.debug("REST request to get Contest : {}", id);
-        Contest contest = contestRepository.findOneWithEagerRelationships(id);
-        ContestDTO contestDTO = contestMapper.toDto(contest);
+        ContestDTO contestDTO = contestService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(contestDTO));
     }
 
@@ -131,7 +120,7 @@ public class ContestResource {
     @Timed
     public ResponseEntity<Void> deleteContest(@PathVariable Long id) {
         log.debug("REST request to delete Contest : {}", id);
-        contestRepository.delete(id);
+        contestService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

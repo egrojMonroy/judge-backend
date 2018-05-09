@@ -4,6 +4,7 @@ import com.juez.JuezApp;
 
 import com.juez.domain.Submission;
 import com.juez.repository.SubmissionRepository;
+import com.juez.service.SubmissionService;
 import com.juez.service.dto.SubmissionDTO;
 import com.juez.service.mapper.SubmissionMapper;
 import com.juez.web.rest.errors.ExceptionTranslator;
@@ -66,6 +67,9 @@ public class SubmissionResourceIntTest {
     private SubmissionMapper submissionMapper;
 
     @Autowired
+    private SubmissionService submissionService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -84,7 +88,7 @@ public class SubmissionResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final SubmissionResource submissionResource = new SubmissionResource(submissionRepository, submissionMapper);
+        final SubmissionResource submissionResource = new SubmissionResource(submissionService);
         this.restSubmissionMockMvc = MockMvcBuilders.standaloneSetup(submissionResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

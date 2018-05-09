@@ -1,5 +1,17 @@
 package com.juez.service;
 
+import com.juez.domain.Submission;
+import com.juez.repository.SubmissionRepository;
+import com.juez.service.dto.SubmissionDTO;
+import com.juez.service.mapper.SubmissionMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
 import com.juez.domain.Code;
 import com.juez.domain.Problem;
 import com.juez.domain.Submission;
@@ -10,26 +22,6 @@ import com.juez.domain.enumeration.Veredict;
 import com.juez.repository.SubmissionRepository;
 import com.juez.repository.UserRepository;
 
-import io.github.jhipster.config.JHipsterProperties;
-
-import org.apache.commons.lang3.CharEncoding;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.MessageSource;
-import org.springframework.expression.spel.CodeFlow;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring4.SpringTemplateEngine;
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.Proxy;
-
-import com.juez.repository.CodeRepository;
-import com.juez.repository.ProblemRepository;
-
-import javax.mail.internet.MimeMessage;
-
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Locale;
@@ -38,15 +30,15 @@ import java.util.Optional;
 import com.juez.service.TestCaseService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import com.juez.repository.CodeRepository;
 import com.juez.repository.ProblemRepository;
 import com.juez.repository.UserRepository;
 /**
- * Service for sending emails.
- * <p>
- * We use the @Async annotation to send emails asynchronously.
+ * Service Implementation for managing Submission.
  */
 @Service
-@Proxy(lazy=false)
+@Transactional
 public class SubmissionService {
 
     private final Logger log = LoggerFactory.getLogger(SubmissionService.class);
@@ -56,13 +48,15 @@ public class SubmissionService {
     private final TestCaseService testCaseService; 
     private final ProblemRepository problemRepository;
     private final UserRepository userRepository;
+    private final SubmissionMapper submissionMapper;
     public SubmissionService (
         SubmissionRepository submissionRepository, 
         FileService fileService,
         CodeRepository codeRepository,
         TestCaseService testCaseService,
         ProblemRepository problemRepository,
-        UserRepository userRepository
+        UserRepository userRepository, 
+        SubmissionMapper submissionMapper
         ) {
         this.submissionRepository = submissionRepository;
         this.fileService = fileService;
@@ -70,7 +64,57 @@ public class SubmissionService {
         this.testCaseService = testCaseService;
         this.problemRepository = problemRepository;
         this.userRepository = userRepository;
+        this.submissionMapper = submissionMapper;
     }
+    /**
+     * Save a submission.
+     *
+     * @param submissionDTO the entity to save
+     * @return the persisted entity
+     */
+    public SubmissionDTO save(SubmissionDTO submissionDTO) {
+        log.debug("Request to save Submission : {}", submissionDTO);
+        Submission submission = submissionMapper.toEntity(submissionDTO);
+        submission = submissionRepository.save(submission);
+        return submissionMapper.toDto(submission);
+    }
+
+    /**
+     * Get all the submissions.
+     *
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public Page<SubmissionDTO> findAll(Pageable pageable) {
+        log.debug("Request to get all Submissions");
+        return submissionRepository.findAll(pageable)
+            .map(submissionMapper::toDto);
+    }
+
+    /**
+     * Get one submission by id.
+     *
+     * @param id the id of the entity
+     * @return the entity
+     */
+    @Transactional(readOnly = true)
+    public SubmissionDTO findOne(Long id) {
+        log.debug("Request to get Submission : {}", id);
+        Submission submission = submissionRepository.findOne(id);
+        return submissionMapper.toDto(submission);
+    }
+
+    /**
+     * Delete the submission by id.
+     *
+     * @param id the id of the entity
+     */
+    public void delete(Long id) {
+        log.debug("Request to delete Submission : {}", id);
+        submissionRepository.delete(id);
+    }
+
     private String currentDir; 
     public String getCurrentDir() {
         return currentDir;

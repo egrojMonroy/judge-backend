@@ -1,9 +1,20 @@
 package com.juez.service;
 
-import org.apache.commons.lang3.text.translate.CodePointTranslator;
+import com.juez.domain.Code;
+import com.juez.repository.CodeRepository;
+import com.juez.service.dto.CodeDTO;
+import com.juez.service.mapper.CodeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import com.juez.service.SubmissionService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
@@ -13,14 +24,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import com.juez.service.FileService;
-import com.juez.domain.Code;
-import com.juez.domain.Submission;
-import com.juez.repository.CodeRepository;
-import com.juez.service.dto.CodeDTO;
-import com.juez.service.mapper.CodeMapper;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import com.juez.service.SubmissionService;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -32,29 +35,82 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.Date;
-
+/**
+ * Service Implementation for managing Code.
+ */
 @Service
-@EnableAsync
+@Transactional
 public class CodeService {
 
-    private final Logger log = LoggerFactory.getLogger(CodeService.class);;
+    private final Logger log = LoggerFactory.getLogger(CodeService.class);
+
     private final CodeRepository codeRepository;
+
     private final CodeMapper codeMapper;
-    
+
     private final FileService fileService;
     private final SubmissionService submissionService;
-    public CodeService (
+    public CodeService(
         CodeRepository codeRepository, 
-        CodeMapper codeMapper, 
+        CodeMapper codeMapper,
         FileService fileService, 
-        SubmissionService submissionService
-        ) {
+        SubmissionService submissionService) {
         this.codeRepository = codeRepository;
         this.codeMapper = codeMapper;
         this.fileService = fileService;
         this.submissionService = submissionService;
     }
+
     /**
+     * Save a code.
+     *
+     * @param codeDTO the entity to save
+     * @return the persisted entity
+     */
+    public CodeDTO save(CodeDTO codeDTO) {
+        log.debug("Request to save Code : {}", codeDTO);
+        Code code = codeMapper.toEntity(codeDTO);
+        code = codeRepository.save(code);
+        return codeMapper.toDto(code);
+    }
+
+    /**
+     * Get all the codes.
+     *
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public Page<CodeDTO> findAll(Pageable pageable) {
+        log.debug("Request to get all Codes");
+        return codeRepository.findAll(pageable)
+            .map(codeMapper::toDto);
+    }
+
+    /**
+     * Get one code by id.
+     *
+     * @param id the id of the entity
+     * @return the entity
+     */
+    @Transactional(readOnly = true)
+    public CodeDTO findOne(Long id) {
+        log.debug("Request to get Code : {}", id);
+        Code code = codeRepository.findOne(id);
+        return codeMapper.toDto(code);
+    }
+
+    /**
+     * Delete the code by id.
+     *
+     * @param id the id of the entity
+     */
+    public void delete(Long id) {
+        log.debug("Request to delete Code : {}", id);
+        codeRepository.delete(id);
+    }
+
+     /**
      * Save file on disk
      * 
      */
@@ -182,4 +238,5 @@ public class CodeService {
     public String getDirInput() {
         return "/home/jorge/Desktop/Tests/Main";
     }
+
 }

@@ -1,16 +1,18 @@
 package com.juez.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.juez.domain.Submission;
-
-import com.juez.repository.SubmissionRepository;
+import com.juez.service.SubmissionService;
 import com.juez.web.rest.errors.BadRequestAlertException;
 import com.juez.web.rest.util.HeaderUtil;
+import com.juez.web.rest.util.PaginationUtil;
 import com.juez.service.dto.SubmissionDTO;
-import com.juez.service.mapper.SubmissionMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,13 +33,10 @@ public class SubmissionResource {
 
     private static final String ENTITY_NAME = "submission";
 
-    private final SubmissionRepository submissionRepository;
+    private final SubmissionService submissionService;
 
-    private final SubmissionMapper submissionMapper;
-
-    public SubmissionResource(SubmissionRepository submissionRepository, SubmissionMapper submissionMapper) {
-        this.submissionRepository = submissionRepository;
-        this.submissionMapper = submissionMapper;
+    public SubmissionResource(SubmissionService submissionService) {
+        this.submissionService = submissionService;
     }
 
     /**
@@ -54,9 +53,7 @@ public class SubmissionResource {
         if (submissionDTO.getId() != null) {
             throw new BadRequestAlertException("A new submission cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Submission submission = submissionMapper.toEntity(submissionDTO);
-        submission = submissionRepository.save(submission);
-        SubmissionDTO result = submissionMapper.toDto(submission);
+        SubmissionDTO result = submissionService.save(submissionDTO);
         return ResponseEntity.created(new URI("/api/submissions/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -78,9 +75,7 @@ public class SubmissionResource {
         if (submissionDTO.getId() == null) {
             return createSubmission(submissionDTO);
         }
-        Submission submission = submissionMapper.toEntity(submissionDTO);
-        submission = submissionRepository.save(submission);
-        SubmissionDTO result = submissionMapper.toDto(submission);
+        SubmissionDTO result = submissionService.save(submissionDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, submissionDTO.getId().toString()))
             .body(result);
@@ -89,15 +84,17 @@ public class SubmissionResource {
     /**
      * GET  /submissions : get all the submissions.
      *
+     * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of submissions in body
      */
     @GetMapping("/submissions")
     @Timed
-    public List<SubmissionDTO> getAllSubmissions() {
-        log.debug("REST request to get all Submissions");
-        List<Submission> submissions = submissionRepository.findAll();
-        return submissionMapper.toDto(submissions);
-        }
+    public ResponseEntity<List<SubmissionDTO>> getAllSubmissions(Pageable pageable) {
+        log.debug("REST request to get a page of Submissions");
+        Page<SubmissionDTO> page = submissionService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/submissions");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
 
     /**
      * GET  /submissions/:id : get the "id" submission.
@@ -109,8 +106,7 @@ public class SubmissionResource {
     @Timed
     public ResponseEntity<SubmissionDTO> getSubmission(@PathVariable Long id) {
         log.debug("REST request to get Submission : {}", id);
-        Submission submission = submissionRepository.findOne(id);
-        SubmissionDTO submissionDTO = submissionMapper.toDto(submission);
+        SubmissionDTO submissionDTO = submissionService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(submissionDTO));
     }
 
@@ -124,7 +120,7 @@ public class SubmissionResource {
     @Timed
     public ResponseEntity<Void> deleteSubmission(@PathVariable Long id) {
         log.debug("REST request to delete Submission : {}", id);
-        submissionRepository.delete(id);
+        submissionService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

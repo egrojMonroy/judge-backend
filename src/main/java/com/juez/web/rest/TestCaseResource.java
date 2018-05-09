@@ -1,16 +1,18 @@
 package com.juez.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.juez.domain.TestCase;
-
-import com.juez.repository.TestCaseRepository;
+import com.juez.service.TestCaseService;
 import com.juez.web.rest.errors.BadRequestAlertException;
 import com.juez.web.rest.util.HeaderUtil;
+import com.juez.web.rest.util.PaginationUtil;
 import com.juez.service.dto.TestCaseDTO;
-import com.juez.service.mapper.TestCaseMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,13 +34,10 @@ public class TestCaseResource {
 
     private static final String ENTITY_NAME = "testCase";
 
-    private final TestCaseRepository testCaseRepository;
+    private final TestCaseService testCaseService;
 
-    private final TestCaseMapper testCaseMapper;
-
-    public TestCaseResource(TestCaseRepository testCaseRepository, TestCaseMapper testCaseMapper) {
-        this.testCaseRepository = testCaseRepository;
-        this.testCaseMapper = testCaseMapper;
+    public TestCaseResource(TestCaseService testCaseService) {
+        this.testCaseService = testCaseService;
     }
 
     /**
@@ -55,9 +54,7 @@ public class TestCaseResource {
         if (testCaseDTO.getId() != null) {
             throw new BadRequestAlertException("A new testCase cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        TestCase testCase = testCaseMapper.toEntity(testCaseDTO);
-        testCase = testCaseRepository.save(testCase);
-        TestCaseDTO result = testCaseMapper.toDto(testCase);
+        TestCaseDTO result = testCaseService.save(testCaseDTO);
         return ResponseEntity.created(new URI("/api/test-cases/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -79,9 +76,7 @@ public class TestCaseResource {
         if (testCaseDTO.getId() == null) {
             return createTestCase(testCaseDTO);
         }
-        TestCase testCase = testCaseMapper.toEntity(testCaseDTO);
-        testCase = testCaseRepository.save(testCase);
-        TestCaseDTO result = testCaseMapper.toDto(testCase);
+        TestCaseDTO result = testCaseService.save(testCaseDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, testCaseDTO.getId().toString()))
             .body(result);
@@ -90,15 +85,17 @@ public class TestCaseResource {
     /**
      * GET  /test-cases : get all the testCases.
      *
+     * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of testCases in body
      */
     @GetMapping("/test-cases")
     @Timed
-    public List<TestCaseDTO> getAllTestCases() {
-        log.debug("REST request to get all TestCases");
-        List<TestCase> testCases = testCaseRepository.findAll();
-        return testCaseMapper.toDto(testCases);
-        }
+    public ResponseEntity<List<TestCaseDTO>> getAllTestCases(Pageable pageable) {
+        log.debug("REST request to get a page of TestCases");
+        Page<TestCaseDTO> page = testCaseService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/test-cases");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
 
     /**
      * GET  /test-cases/:id : get the "id" testCase.
@@ -110,8 +107,7 @@ public class TestCaseResource {
     @Timed
     public ResponseEntity<TestCaseDTO> getTestCase(@PathVariable Long id) {
         log.debug("REST request to get TestCase : {}", id);
-        TestCase testCase = testCaseRepository.findOne(id);
-        TestCaseDTO testCaseDTO = testCaseMapper.toDto(testCase);
+        TestCaseDTO testCaseDTO = testCaseService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(testCaseDTO));
     }
 
@@ -125,7 +121,7 @@ public class TestCaseResource {
     @Timed
     public ResponseEntity<Void> deleteTestCase(@PathVariable Long id) {
         log.debug("REST request to delete TestCase : {}", id);
-        testCaseRepository.delete(id);
+        testCaseService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

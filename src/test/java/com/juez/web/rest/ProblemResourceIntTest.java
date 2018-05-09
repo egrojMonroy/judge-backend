@@ -4,6 +4,7 @@ import com.juez.JuezApp;
 
 import com.juez.domain.Problem;
 import com.juez.repository.ProblemRepository;
+import com.juez.service.ProblemService;
 import com.juez.service.dto.ProblemDTO;
 import com.juez.service.mapper.ProblemMapper;
 import com.juez.web.rest.errors.ExceptionTranslator;
@@ -65,6 +66,9 @@ public class ProblemResourceIntTest {
     private ProblemMapper problemMapper;
 
     @Autowired
+    private ProblemService problemService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -83,7 +87,7 @@ public class ProblemResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final ProblemResource problemResource = new ProblemResource(problemRepository, problemMapper);
+        final ProblemResource problemResource = new ProblemResource(problemService);
         this.restProblemMockMvc = MockMvcBuilders.standaloneSetup(problemResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

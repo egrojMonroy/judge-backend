@@ -4,6 +4,7 @@ import com.juez.JuezApp;
 
 import com.juez.domain.Coder;
 import com.juez.repository.CoderRepository;
+import com.juez.service.CoderService;
 import com.juez.service.dto.CoderDTO;
 import com.juez.service.mapper.CoderMapper;
 import com.juez.web.rest.errors.ExceptionTranslator;
@@ -50,6 +51,9 @@ public class CoderResourceIntTest {
     private CoderMapper coderMapper;
 
     @Autowired
+    private CoderService coderService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -68,7 +72,7 @@ public class CoderResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CoderResource coderResource = new CoderResource(coderRepository, coderMapper);
+        final CoderResource coderResource = new CoderResource(coderService);
         this.restCoderMockMvc = MockMvcBuilders.standaloneSetup(coderResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

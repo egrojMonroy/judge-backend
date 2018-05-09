@@ -4,6 +4,7 @@ import com.juez.JuezApp;
 
 import com.juez.domain.Code;
 import com.juez.repository.CodeRepository;
+import com.juez.service.CodeService;
 import com.juez.service.dto.CodeDTO;
 import com.juez.service.mapper.CodeMapper;
 import com.juez.web.rest.errors.ExceptionTranslator;
@@ -61,6 +62,9 @@ public class CodeResourceIntTest {
     private CodeMapper codeMapper;
 
     @Autowired
+    private CodeService codeService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -79,7 +83,7 @@ public class CodeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CodeResource codeResource = new CodeResource(codeRepository, codeMapper);
+        final CodeResource codeResource = new CodeResource(codeService);
         this.restCodeMockMvc = MockMvcBuilders.standaloneSetup(codeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

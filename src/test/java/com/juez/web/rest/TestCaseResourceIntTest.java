@@ -4,6 +4,7 @@ import com.juez.JuezApp;
 
 import com.juez.domain.TestCase;
 import com.juez.repository.TestCaseRepository;
+import com.juez.service.TestCaseService;
 import com.juez.service.dto.TestCaseDTO;
 import com.juez.service.mapper.TestCaseMapper;
 import com.juez.web.rest.errors.ExceptionTranslator;
@@ -56,6 +57,9 @@ public class TestCaseResourceIntTest {
     private TestCaseMapper testCaseMapper;
 
     @Autowired
+    private TestCaseService testCaseService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -74,7 +78,7 @@ public class TestCaseResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final TestCaseResource testCaseResource = new TestCaseResource(testCaseRepository, testCaseMapper);
+        final TestCaseResource testCaseResource = new TestCaseResource(testCaseService);
         this.restTestCaseMockMvc = MockMvcBuilders.standaloneSetup(testCaseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

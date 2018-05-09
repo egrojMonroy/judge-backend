@@ -72,8 +72,6 @@ public class ContestController {
     public String addProblems(@RequestParam Long problemId, @RequestParam Long contestId ) throws URISyntaxException {
         log.debug("REST request to save Contest : {}", problemId, contestId);
        
-        contestService.addProblems(contestId, problemId);
-        
         return "555";
     }
 

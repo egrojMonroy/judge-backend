@@ -1,14 +1,11 @@
 package com.juez.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.juez.domain.Problem;
-
-import com.juez.repository.ProblemRepository;
+import com.juez.service.ProblemService;
 import com.juez.web.rest.errors.BadRequestAlertException;
 import com.juez.web.rest.util.HeaderUtil;
 import com.juez.web.rest.util.PaginationUtil;
 import com.juez.service.dto.ProblemDTO;
-import com.juez.service.mapper.ProblemMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,13 +34,10 @@ public class ProblemResource {
 
     private static final String ENTITY_NAME = "problem";
 
-    private final ProblemRepository problemRepository;
+    private final ProblemService problemService;
 
-    private final ProblemMapper problemMapper;
-
-    public ProblemResource(ProblemRepository problemRepository, ProblemMapper problemMapper) {
-        this.problemRepository = problemRepository;
-        this.problemMapper = problemMapper;
+    public ProblemResource(ProblemService problemService) {
+        this.problemService = problemService;
     }
 
     /**
@@ -60,9 +54,7 @@ public class ProblemResource {
         if (problemDTO.getId() != null) {
             throw new BadRequestAlertException("A new problem cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Problem problem = problemMapper.toEntity(problemDTO);
-        problem = problemRepository.save(problem);
-        ProblemDTO result = problemMapper.toDto(problem);
+        ProblemDTO result = problemService.save(problemDTO);
         return ResponseEntity.created(new URI("/api/problems/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -84,9 +76,7 @@ public class ProblemResource {
         if (problemDTO.getId() == null) {
             return createProblem(problemDTO);
         }
-        Problem problem = problemMapper.toEntity(problemDTO);
-        problem = problemRepository.save(problem);
-        ProblemDTO result = problemMapper.toDto(problem);
+        ProblemDTO result = problemService.save(problemDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, problemDTO.getId().toString()))
             .body(result);
@@ -102,9 +92,9 @@ public class ProblemResource {
     @Timed
     public ResponseEntity<List<ProblemDTO>> getAllProblems(Pageable pageable) {
         log.debug("REST request to get a page of Problems");
-        Page<Problem> page = problemRepository.findAll(pageable);
+        Page<ProblemDTO> page = problemService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/problems");
-        return new ResponseEntity<>(problemMapper.toDto(page.getContent()), headers, HttpStatus.OK);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**
@@ -117,8 +107,7 @@ public class ProblemResource {
     @Timed
     public ResponseEntity<ProblemDTO> getProblem(@PathVariable Long id) {
         log.debug("REST request to get Problem : {}", id);
-        Problem problem = problemRepository.findOne(id);
-        ProblemDTO problemDTO = problemMapper.toDto(problem);
+        ProblemDTO problemDTO = problemService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(problemDTO));
     }
 
@@ -132,7 +121,7 @@ public class ProblemResource {
     @Timed
     public ResponseEntity<Void> deleteProblem(@PathVariable Long id) {
         log.debug("REST request to delete Problem : {}", id);
-        problemRepository.delete(id);
+        problemService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

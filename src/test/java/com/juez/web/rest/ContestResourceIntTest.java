@@ -4,6 +4,7 @@ import com.juez.JuezApp;
 
 import com.juez.domain.Contest;
 import com.juez.repository.ContestRepository;
+import com.juez.service.ContestService;
 import com.juez.service.dto.ContestDTO;
 import com.juez.service.mapper.ContestMapper;
 import com.juez.web.rest.errors.ExceptionTranslator;
@@ -64,6 +65,9 @@ public class ContestResourceIntTest {
     private ContestMapper contestMapper;
 
     @Autowired
+    private ContestService contestService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -82,7 +86,7 @@ public class ContestResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final ContestResource contestResource = new ContestResource(contestRepository, contestMapper);
+        final ContestResource contestResource = new ContestResource(contestService);
         this.restContestMockMvc = MockMvcBuilders.standaloneSetup(contestResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

@@ -1,13 +1,10 @@
 package com.juez.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.juez.domain.Coder;
-
-import com.juez.repository.CoderRepository;
+import com.juez.service.CoderService;
 import com.juez.web.rest.errors.BadRequestAlertException;
 import com.juez.web.rest.util.HeaderUtil;
 import com.juez.service.dto.CoderDTO;
-import com.juez.service.mapper.CoderMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +28,10 @@ public class CoderResource {
 
     private static final String ENTITY_NAME = "coder";
 
-    private final CoderRepository coderRepository;
+    private final CoderService coderService;
 
-    private final CoderMapper coderMapper;
-
-    public CoderResource(CoderRepository coderRepository, CoderMapper coderMapper) {
-        this.coderRepository = coderRepository;
-        this.coderMapper = coderMapper;
+    public CoderResource(CoderService coderService) {
+        this.coderService = coderService;
     }
 
     /**
@@ -54,9 +48,7 @@ public class CoderResource {
         if (coderDTO.getId() != null) {
             throw new BadRequestAlertException("A new coder cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Coder coder = coderMapper.toEntity(coderDTO);
-        coder = coderRepository.save(coder);
-        CoderDTO result = coderMapper.toDto(coder);
+        CoderDTO result = coderService.save(coderDTO);
         return ResponseEntity.created(new URI("/api/coders/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -78,9 +70,7 @@ public class CoderResource {
         if (coderDTO.getId() == null) {
             return createCoder(coderDTO);
         }
-        Coder coder = coderMapper.toEntity(coderDTO);
-        coder = coderRepository.save(coder);
-        CoderDTO result = coderMapper.toDto(coder);
+        CoderDTO result = coderService.save(coderDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, coderDTO.getId().toString()))
             .body(result);
@@ -95,8 +85,7 @@ public class CoderResource {
     @Timed
     public List<CoderDTO> getAllCoders() {
         log.debug("REST request to get all Coders");
-        List<Coder> coders = coderRepository.findAllWithEagerRelationships();
-        return coderMapper.toDto(coders);
+        return coderService.findAll();
         }
 
     /**
@@ -109,8 +98,7 @@ public class CoderResource {
     @Timed
     public ResponseEntity<CoderDTO> getCoder(@PathVariable Long id) {
         log.debug("REST request to get Coder : {}", id);
-        Coder coder = coderRepository.findOneWithEagerRelationships(id);
-        CoderDTO coderDTO = coderMapper.toDto(coder);
+        CoderDTO coderDTO = coderService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(coderDTO));
     }
 
@@ -124,7 +112,7 @@ public class CoderResource {
     @Timed
     public ResponseEntity<Void> deleteCoder(@PathVariable Long id) {
         log.debug("REST request to delete Coder : {}", id);
-        coderRepository.delete(id);
+        coderService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }
