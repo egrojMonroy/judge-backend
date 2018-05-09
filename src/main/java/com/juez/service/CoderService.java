@@ -1,18 +1,21 @@
 package com.juez.service;
 
 import com.juez.domain.Coder;
+import com.juez.domain.Contest;
+import com.juez.domain.User;
 import com.juez.repository.CoderRepository;
+import com.juez.repository.ContestRepository;
 import com.juez.service.dto.CoderDTO;
 import com.juez.service.mapper.CoderMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.juez.service.UserService;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import com.juez.repository.ContestRepository;
 /**
  * Service Implementation for managing Coder.
  */
@@ -26,9 +29,17 @@ public class CoderService {
 
     private final CoderMapper coderMapper;
 
-    public CoderService(CoderRepository coderRepository, CoderMapper coderMapper) {
+    private final ContestRepository contestRepository;
+private final UserService userService;
+    public CoderService(
+        CoderRepository coderRepository, 
+        CoderMapper coderMapper,
+        UserService userService,
+        ContestRepository contestRepository) {
+        this.userService = userService;
         this.coderRepository = coderRepository;
         this.coderMapper = coderMapper;
+        this.contestRepository = contestRepository;
     }
 
     /**
@@ -69,7 +80,19 @@ public class CoderService {
         Coder coder = coderRepository.findOneWithEagerRelationships(id);
         return coderMapper.toDto(coder);
     }
-
+    public CoderDTO create(Long contestId) {
+        User user = userService.getUserWithAuthorities();
+        Coder actual = coderRepository.findOneByUser_id(user.getId());
+        if( actual == null) {
+            actual = new Coder();
+            actual.setUser(user);
+            coderRepository.save(actual);
+        } 
+        Contest contest = contestRepository.findOne(contestId);
+        actual.addContest(contest);
+        coderRepository.save(actual);
+		return coderMapper.toDto(actual);
+    }
     /**
      * Delete the coder by id.
      *

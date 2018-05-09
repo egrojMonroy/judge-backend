@@ -2,9 +2,12 @@ package com.juez.repository;
 
 import com.juez.domain.Contest;
 import org.springframework.stereotype.Repository;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
+
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -23,4 +26,7 @@ public interface ContestRepository extends JpaRepository<Contest, Long> {
     Contest findOneWithEagerRelationships(@Param("id") Long id);
 
     Contest findById(Long id);
+
+    Page<Contest> findByEnddateBefore(ZonedDateTime zonedDateTime, Pageable pageable);
+    Page<Contest> findByStartdateAfterOrEnddateAfter(ZonedDateTime zonedDateTime,ZonedDateTime zonedDateTimed , Pageable pageable);
 }

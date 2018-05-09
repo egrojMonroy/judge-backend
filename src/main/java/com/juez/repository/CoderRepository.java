@@ -19,4 +19,5 @@ public interface CoderRepository extends JpaRepository<Coder, Long> {
     @Query("select coder from Coder coder left join fetch coder.contests where coder.id =:id")
     Coder findOneWithEagerRelationships(@Param("id") Long id);
 
+    Coder findOneByUser_id(Long id);
 }

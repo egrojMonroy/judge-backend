@@ -60,19 +60,53 @@ public class ContestController {
         this.contestService = contestService;
     }
 
-    /**
-     * POST  /contests : Create a new contest.
+  /**
+     * GET  /contests : get all the contests.
+     *
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of contests in body
+     */
+    @GetMapping("/contests/before")
+    @Timed
+    public ResponseEntity<List<ContestDTO>> getAllContests(Pageable pageable) {
+        log.debug("REST request to get a page of Contests");
+        Page<ContestDTO> page = contestService.findAllBeforeEndDate(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/contests");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+/**
+     * GET  /contests : get all the contests.
+     *
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of contests in body
+     */
+    @GetMapping("/contests/after")
+    @Timed
+    public ResponseEntity<List<ContestDTO>> getAllContestsAfter(Pageable pageable) {
+        log.debug("REST request to get a page of Contests");
+        Page<ContestDTO> page = contestService.findAllRunning(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/contests");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+     /**
+     * POST  /contests : C\\
      *
      * @param contestDTO the contestDTO to create
      * @return the ResponseEntity with status 201 (Created) and with body the new contestDTO, or with status 400 (Bad Request) if the contest has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/contests/add-problem")
+    @PostMapping("/asdf")
     @Timed
-    public String addProblems(@RequestParam Long problemId, @RequestParam Long contestId ) throws URISyntaxException {
-        log.debug("REST request to save Contest : {}", problemId, contestId);
-       
-        return "555";
+    public ResponseEntity<ContestDTO> createContest(@RequestBody ContestDTO contestDTO) throws URISyntaxException {
+        log.debug("REST request to save Contest : {}", contestDTO);
+        if (contestDTO.getId() != null) {
+            throw new BadRequestAlertException("A new contest cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        ContestDTO result = contestService.save(contestDTO);
+        return ResponseEntity.created(new URI("/api/contests/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
-
 }

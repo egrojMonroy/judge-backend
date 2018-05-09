@@ -1,5 +1,7 @@
 package com.juez.service;
 
+import java.time.ZonedDateTime;
+
 import com.juez.domain.Contest;
 import com.juez.domain.User;
 import com.juez.repository.ContestRepository;
@@ -75,7 +77,18 @@ public class ContestService {
         Contest contest = contestRepository.findOneWithEagerRelationships(id);
         return contestMapper.toDto(contest);
     }
-
+    
+    public Page<ContestDTO> findAllBeforeEndDate(Pageable pageable){
+        ZonedDateTime dateTime = ZonedDateTime.now();
+        dateTime = dateTime.minusHours(19);
+        return contestRepository.findByEnddateBefore( dateTime, pageable).map(contestMapper::toDto);
+    }
+    public Page<ContestDTO> findAllRunning(Pageable pageable){
+        ZonedDateTime dateTime = ZonedDateTime.now();
+        dateTime = dateTime.minusHours(19);
+        System.out.println("TUNNNIN"+dateTime);
+        return contestRepository.findByStartdateAfterOrEnddateAfter(dateTime,dateTime, pageable).map(contestMapper::toDto);
+    }
     /**
      * Delete the contest by id.
      *
