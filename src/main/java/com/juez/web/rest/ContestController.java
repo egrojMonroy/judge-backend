@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing Contest.
@@ -90,6 +91,18 @@ public class ContestController {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+/**
+     * GET  /contests : get all the contests.
+     * @param contesId
+     * @return the ResponseEntity with status 200 (OK) and the list of contests in body
+     */
+    @GetMapping("/contests/problems")
+    @Timed
+    public ResponseEntity<List<ProblemDTO>> getAllProblems(@RequestParam Long contestId) {
+        log.debug("REST request to get a page of Contests");
+        List<ProblemDTO> page = contestService.getProblemsByContest(contestId);
+        return new ResponseEntity<>(page, HttpStatus.OK);   
+    }
      /**
      * POST  /contests : C\\
      *

@@ -1,12 +1,19 @@
 package com.juez.service;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import com.juez.domain.Contest;
+import com.juez.domain.Problem;
 import com.juez.domain.User;
 import com.juez.repository.ContestRepository;
 import com.juez.service.dto.ContestDTO;
+import com.juez.service.dto.ProblemDTO;
 import com.juez.service.mapper.ContestMapper;
+import com.juez.service.mapper.ProblemMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -14,7 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.juez.service.mapper.ProblemMapper;
 
 /**
  * Service Implementation for managing Contest.
@@ -29,13 +36,16 @@ public class ContestService {
 
     private final ContestMapper contestMapper;
     private final UserService userService;
+    private final ProblemMapper problemMapper;
     public ContestService(
         ContestRepository contestRepository, 
         ContestMapper contestMapper,
-        UserService userService) {
+        UserService userService,
+        ProblemMapper problemMapper) {
         this.contestRepository = contestRepository;
         this.contestMapper = contestMapper;
         this.userService = userService;
+        this.problemMapper = problemMapper;
     }
 
     /**
@@ -98,4 +108,13 @@ public class ContestService {
         log.debug("Request to delete Contest : {}", id);
         contestRepository.delete(id);
     }
+
+
+    public List<ProblemDTO> getProblemsByContest (Long contestId) {
+        Contest contest = contestRepository.findOne(contestId);
+        Set<Problem> problems = contest.getProblems();
+        List<Problem> problemsList = new ArrayList<Problem>() ; 
+        problemsList.addAll(problems);
+        return problemMapper.toDto(problemsList);
+    } 
 }
