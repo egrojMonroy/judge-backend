@@ -13,8 +13,23 @@
             Your JHipster account has been created, please click on the URL below to access it:
         </p>
         <p>
-          <a th:href="@{|${baseUrl}/#/reset/finish?key=${user.resetKey}|}"
-             th:text="@{|${baseUrl}/#/reset/finish?key=${user.resetKey}|}">Login link</a>
+          <!-- <a th:href="@{|${baseUrl}/#/reset/finish?key=${user.resetKey}|}"
+             th:text="@{|${baseUrl}/#/reset/finish?key=${user.resetKey}|}">Login link</a> -->
+
+            <!-- 
+                + +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                    | Module Name: classMonkey |
+                    | Module Purpose: emulate a monkey |
+                    | Inputs: Bananas |
+                    | Outputs: Grunts |
+                    | Throws: Poop |
+                    | cambio de base-url para redireccionar al host local del frontend
+                    | base-url: http://localhost:4200
+                ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            -->
+            <!-- envio de key para creacion de contraseña-->
+            <a th:href="@{|${baseUrl}/resetpassword?key=${user.resetKey}|}" 
+                th:text="@{|${baseUrl}/resetpassword?key=${user.resetKey}|}">Login Link</a>
         </p>
         <p>
             <span th:text="#{email.activation.text2}">Regards, </span>

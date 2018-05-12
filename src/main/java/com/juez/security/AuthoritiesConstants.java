@@ -9,6 +9,9 @@ public final class AuthoritiesConstants {
 
     public static final String USER = "ROLE_USER";
 
+    // ROL TEACHER EN DATA_BASE BY DEFAULT
+    public static final String TEACHER = "ROLE_TEACHER";
+
     public static final String ANONYMOUS = "ROLE_ANONYMOUS";
 
     private AuthoritiesConstants() {
