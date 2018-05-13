@@ -13,8 +13,23 @@
             Your JHipster account has been created, please click on the URL below to activate it:
         </p>
         <p>
-            <a th:href="@{|${baseUrl}/#/activate?key=${user.activationKey}|}"
-               th:text="@{|${baseUrl}/#/activate?key=${user.activationKey}|}">Activation Link</a>
+            <!-- <a th:href="@{|${baseUrl}/#/activate?key=${user.activationKey}|}"
+               th:text="@{|${baseUrl}/#/activate?key=${user.activationKey}|}">Activation Link</a> -->
+
+            <!-- 
+                + +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                    | Module Name: classMonkey |
+                    | Module Purpose: emulate a monkey |
+                    | Inputs: Bananas |
+                    | Outputs: Grunts |
+                    | Throws: Poop |
+                    | cambio de base-url para redireccionar al host local del frontend
+                    | base-url: http://localhost:4200
+                ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            -->
+            <!-- envio de key para activacion de cuenta de contraseña-->
+            <a th:href="@{|${baseUrl}/activateaccount?key=${user.activationKey}|}" 
+               th:text="@{|${baseUrl}/activateaccount?key=${user.activationKey}|}">Activation Link</a>
         </p>
         <p>
             <span th:text="#{email.activation.text2}">Regards, </span>

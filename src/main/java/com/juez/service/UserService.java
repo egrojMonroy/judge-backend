@@ -103,10 +103,13 @@ public class UserService {
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
         newUser.setEmail(email);
-        newUser.setImageUrl(imageUrl);
-        newUser.setLangKey(langKey);
-        // new user is not active
+        // newUser.setImageUrl(imageUrl);
+        // newUser.setLangKey(langKey);
         newUser.setActivated(false);
+        // new user is not active
+        newUser.setImageUrl("/");
+        newUser.setLangKey("en");
+        // newUser.setActivated(true);
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         authorities.add(authority);
