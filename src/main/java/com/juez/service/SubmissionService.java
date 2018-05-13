@@ -3,7 +3,10 @@ package com.juez.service;
 import com.juez.domain.Submission;
 import com.juez.repository.SubmissionRepository;
 import com.juez.service.dto.SubmissionDTO;
+import com.juez.service.mapper.ProblemMapper;
 import com.juez.service.mapper.SubmissionMapper;
+
+import org.json.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,8 +14,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.juez.domain.Code;
+import com.juez.domain.Coder;
+import com.juez.domain.Contest;
 import com.juez.domain.Problem;
 import com.juez.domain.Submission;
 import com.juez.domain.TestCase;
@@ -21,11 +27,16 @@ import com.juez.domain.enumeration.Language;
 import com.juez.domain.enumeration.Veredict;
 import com.juez.repository.SubmissionRepository;
 import com.juez.repository.UserRepository;
-
+import com.juez.repository.ContestRepository;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.juez.service.TestCaseService;
 import org.springframework.scheduling.annotation.Async;
@@ -49,6 +60,7 @@ public class SubmissionService {
     private final ProblemRepository problemRepository;
     private final UserRepository userRepository;
     private final SubmissionMapper submissionMapper;
+    private final ContestRepository contestRepository;
     public SubmissionService (
         SubmissionRepository submissionRepository, 
         FileService fileService,
@@ -56,7 +68,8 @@ public class SubmissionService {
         TestCaseService testCaseService,
         ProblemRepository problemRepository,
         UserRepository userRepository, 
-        SubmissionMapper submissionMapper
+        SubmissionMapper submissionMapper,
+        ContestRepository contestRepository
         ) {
         this.submissionRepository = submissionRepository;
         this.fileService = fileService;
@@ -65,6 +78,7 @@ public class SubmissionService {
         this.problemRepository = problemRepository;
         this.userRepository = userRepository;
         this.submissionMapper = submissionMapper;
+        this.contestRepository = contestRepository;
     }
     /**
      * Save a submission.
@@ -245,5 +259,149 @@ public class SubmissionService {
 
     public String getDirInput() {
         return "/home/jorge/Desktop/Tests/Main";
+    }
+
+    public List<SubmissionDTO> getSubmissionsOfContest(Long id) {
+        Contest contest = this.contestRepository.findOne(id);
+        if(contest != null) {
+            ZonedDateTime start = contest.getStartdate();
+            ZonedDateTime end = contest.getEnddate();
+            System.out.println("/////////////////////////////CONTEST start "+start+" end "+end);
+            List<SubmissionDTO> list = submissionMapper.toDto(submissionRepository.findAllByDateuploadBetween(start, end));
+            return list; 
+        }
+        return null;
+    }
+    public List<SubmissionDTO> getSubmissionsUsersContest(Long id) {
+        Contest contest = this.contestRepository.findOne(id);
+        if(contest != null) {
+            Set<User> submitters = getSubmitters(contest);
+            Set<Problem> problems = getProblems(contest);
+            ZonedDateTime start = contest.getStartdate();
+            ZonedDateTime end = contest.getEnddate();
+            System.out.println("/////////////////////////////CONTEST start "+start+" end "+end);
+            List<Submission> submissions = submissionRepository.findAllByDateuploadBetweenAndSubmitterInAndProblemIn(start,end,submitters, problems);
+            group(submissions);
+            List<SubmissionDTO> list = submissionMapper.toDto(submissions);
+            return list; 
+        }
+        return null;
+
+    }
+    public JSONArray getJSON (Long id) throws JSONException{
+        Contest contest = this.contestRepository.findOne(id);
+        if(contest != null) {
+            Set<User> submitters = getSubmitters(contest);
+            Set<Problem> problems = getProblems(contest);
+            ZonedDateTime start = contest.getStartdate();
+            ZonedDateTime end = contest.getEnddate();
+            System.out.println("/////////////////////////////CONTEST start "+start+" end "+end);
+            Iterator<User> iterator = submitters.iterator();
+            
+            JSONArray jarray = new JSONArray();
+            while(iterator.hasNext()){
+                JSONObject json = new JSONObject();
+                User s = iterator.next();
+                List<Submission> submissions = submissionRepository.findAllByDateuploadBetweenAndSubmitterAndProblemIn(start,end,s, problems);
+                json.put("userName",s.getLogin());
+                json.put("info",groupSubmissions(submissions));
+                jarray.put(json);
+            }
+            
+            return jarray;
+        }
+        return null;
+
+    }
+    public JSONArray groupSubmissions(List<Submission> subs) throws JSONException{
+        JSONObject data = new JSONObject(),status = new JSONObject(); 
+        Veredict ver = Veredict.ACCEPTED; 
+        JSONArray jarray = new JSONArray();
+        Map<String, List<Submission> > listGrouped = 
+        subs.stream().collect(Collectors.groupingBy(s -> s.getProblem().getName()));
+        for(String key: listGrouped.keySet() ){
+            JSONObject info = new JSONObject();
+            List<Submission> list = listGrouped.get(key);
+            Integer count = list.size();
+            ZonedDateTime date = null;
+            Veredict finalV = null;
+            for(Submission q: list) {
+
+                if(date == null) {
+                    date = q.getDateupload();
+                    finalV = q.getStatus();
+                } else {
+                    if(q.getStatus() == ver) {
+                        date = q.getDateupload();
+                        finalV = q.getStatus();
+                        break;
+                    } else {
+                        if(q.getDateupload().isAfter(date)) {
+                            date = q.getDateupload();
+                            finalV = q.getStatus();
+                        }
+                    }
+                }
+            }
+            info.put("problemName",key);
+            info.put("cout",count);
+            info.put("date",date); 
+            info.put("veredict", finalV);
+            jarray.put(info);
+        }
+        return jarray;
+    }
+    public JSONObject group(List<Submission> subs) {
+        Map<Object, List<Submission>> studlistGrouped =
+        subs.stream().collect(Collectors.groupingBy(s -> s.getSubmitter().getLogin()));
+        System.out.println(" HEEEEEEEEEEE GROUPED BY SUBMITTER");
+        System.out.println(studlistGrouped.toString());
+        
+        
+        System.out.println("--//////////////////////////////-- "+new JSONObject(studlistGrouped));
+        return new JSONObject(studlistGrouped);
+    }
+    public Set<Problem> getProblems (Contest contest) {
+        Set<Problem> problems = contest.getProblems();
+        return problems;
+    }
+    public Set<User> getSubmitters(Contest contest){
+        Set<Coder> coders = contest.getCoders();
+        Set<User> users = new HashSet<User>();
+        coders.forEach(
+            (c) -> {
+                users.add(c.getUser() );
+            }
+        );
+        return users;
+    } 
+    public List<SubmissionDTO> getStatusContest( Long id ) {
+        List<SubmissionDTO> subs = getSubmissionsOfContest(id);
+        Set<Long> problems = getIdProblems(id);
+        Iterator<SubmissionDTO> iterator = subs.iterator();
+        while(iterator.hasNext()) {
+            SubmissionDTO s = iterator.next();
+            if(!problems.contains(s.getProblemId())){
+                iterator.remove();
+            }
+        }
+         
+        return subs;
+    }
+    public Set<Long> getIdProblems (Long id) {
+        Contest contest = contestRepository.findById(id);
+        Set<Problem> problems = contest.getProblems();
+        Set<Long> problemsId = new HashSet<Long>();
+        problems.forEach((p) -> {
+            Long x = p.getId();
+            problemsId.add(x);
+        });
+        return problemsId;
+    }
+
+    public Page<SubmissionDTO> getAllSubmission(Pageable pageable){
+        Page<Submission> page = submissionRepository.findAll(pageable);
+        Page<SubmissionDTO> pageDTO = page.map(submissionMapper::toDto);
+        return pageDTO;
     }
 }

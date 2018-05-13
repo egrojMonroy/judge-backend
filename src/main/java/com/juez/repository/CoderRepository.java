@@ -20,4 +20,5 @@ public interface CoderRepository extends JpaRepository<Coder, Long> {
     Coder findOneWithEagerRelationships(@Param("id") Long id);
 
     Coder findOneByUser_id(Long id);
+    Coder findOneByContests_IdAndUser_Login(Long id, String username);
 }

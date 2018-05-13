@@ -29,7 +29,7 @@
     "entityTableName": "coder",
     "dto": "mapstruct",
     "pagination": "no",
-    "service": "no",
+    "service": "serviceClass",
     "jpaMetamodelFiltering": false,
     "angularJSSuffix": "mySuffix"
 }

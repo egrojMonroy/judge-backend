@@ -8,6 +8,7 @@ import com.juez.service.dto.CoderDTO;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +49,12 @@ public class CoderController {
         return ResponseEntity.created(new URI("/api/coders/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+    @GetMapping("/coders/contest")
+    @Timed
+    public ResponseEntity<Boolean> coderInContest(@RequestParam Long contestId) throws URISyntaxException {
+        Boolean res = coderService.coderRegistered(contestId);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
    

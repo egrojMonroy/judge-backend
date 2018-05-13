@@ -16,6 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.juez.repository.ContestRepository;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 /**
  * Service Implementation for managing Coder.
  */
@@ -101,5 +104,14 @@ private final UserService userService;
     public void delete(Long id) {
         log.debug("Request to delete Coder : {}", id);
         coderRepository.delete(id);
+    }
+    public boolean coderRegistered(Long contestId){ 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Coder coder = coderRepository.findOneByContests_IdAndUser_Login(contestId, auth.getName());
+        if(coder != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

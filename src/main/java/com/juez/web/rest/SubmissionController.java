@@ -7,9 +7,15 @@ import com.juez.domain.Submission;
 import com.juez.repository.SubmissionRepository;
 import com.juez.web.rest.util.HeaderUtil;
 import com.juez.web.rest.util.PaginationUtil;
+import com.juez.service.SubmissionService;
 import com.juez.service.dto.SubmissionDTO;
 import com.juez.service.mapper.SubmissionMapper;
 import io.github.jhipster.web.util.ResponseUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -18,7 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.zalando.problem.spring.web.advice.HttpStatusAdapter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -41,9 +47,12 @@ import javax.print.attribute.standard.Media;
 public class SubmissionController<LabPatientInfo> {
 
     private final SubmissionRepository submissionRepository;
-
-    public SubmissionController(SubmissionRepository submissionRepository){
+    private final SubmissionService submissionService;
+    public SubmissionController(
+        SubmissionRepository submissionRepository,
+        SubmissionService submissionService){
         this.submissionRepository = submissionRepository;
+        this.submissionService = submissionService;
     }
 	/**
      * POST  /submissions : Create a new submission.
@@ -64,12 +73,23 @@ public class SubmissionController<LabPatientInfo> {
      */
     @GetMapping("/submissions/all")
     @Timed
-    public ResponseEntity< Page<Submission> > getAllSubmissions(Pageable pageable) {
-        Page<Submission> page = submissionRepository.findAll(pageable);
+    public ResponseEntity< Page<SubmissionDTO> > getAllSubmissions(Pageable pageable) {
+        Page<SubmissionDTO> page = submissionService.getAllSubmission(pageable);
         return new ResponseEntity<>(page , HttpStatus.OK);
     }
 
-
+    @GetMapping("/submissions/contest")
+    @Timed
+    public ResponseEntity< List<SubmissionDTO> > getSubmissionsInContest (@RequestParam Long contestId) {
+        return new ResponseEntity<> (submissionService.getStatusContest(contestId), HttpStatus.OK);
+    }
+    
+    @GetMapping(path = "/submissions/subs", produces = "application/json")
+    @Timed
+    public String  getSubmissionsUsers (@RequestParam Long contestId) throws JSONException {
+        return submissionService.getJSON(contestId).toString();
+    }
+    
     @PostMapping("/post")
     @ResponseBody
     public String saveReport(@RequestPart MultipartFile reportFile) throws IOException {

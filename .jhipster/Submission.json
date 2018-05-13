@@ -37,8 +37,8 @@
     "changelogDate": "20180406140139",
     "entityTableName": "submission",
     "dto": "mapstruct",
-    "pagination": "no",
-    "service": "no",
+    "pagination": "pagination",
+    "service": "serviceClass",
     "jpaMetamodelFiltering": false,
     "angularJSSuffix": "mySuffix"
 }
