@@ -345,15 +345,19 @@ public class SubmissionService {
                 if(date == null) {
                     date = q.getDateupload();
                     finalV = q.getStatus();
+                    System.out.println("111111111111111111111111111111  => "+finalV);
+                    if(finalV == ver) break;
                 } else {
                     if(q.getStatus() == ver) {
                         date = q.getDateupload();
                         finalV = q.getStatus();
+                        System.out.println("22222222222222222222222 ACCEPTED BREAK  => "+finalV);
                         break;
                     } else {
                         if(q.getDateupload().isAfter(date)) {
                             date = q.getDateupload();
                             finalV = q.getStatus();
+                            System.out.println("3333333333333333333333333 CONTINUE  => "+finalV);
                         }
                     }
                 }
