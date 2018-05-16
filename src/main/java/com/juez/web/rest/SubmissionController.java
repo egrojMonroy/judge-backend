@@ -73,8 +73,8 @@ public class SubmissionController<LabPatientInfo> {
      */
     @GetMapping("/submissions/all")
     @Timed
-    public ResponseEntity< Page<SubmissionDTO> > getAllSubmissions(Pageable pageable) {
-        Page<SubmissionDTO> page = submissionService.getAllSubmission(pageable);
+    public ResponseEntity< Page<Submission> > getAllSubmissions(Pageable pageable) {
+        Page<Submission> page = submissionService.getAllSubmission(pageable);
         return new ResponseEntity<>(page , HttpStatus.OK);
     }
 

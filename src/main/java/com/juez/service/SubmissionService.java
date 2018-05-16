@@ -28,6 +28,8 @@ import com.juez.domain.enumeration.Veredict;
 import com.juez.repository.SubmissionRepository;
 import com.juez.repository.UserRepository;
 import com.juez.repository.ContestRepository;
+
+import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -299,12 +301,16 @@ public class SubmissionService {
             Iterator<User> iterator = submitters.iterator();
             
             JSONArray jarray = new JSONArray();
+            
             while(iterator.hasNext()){
-                JSONObject json = new JSONObject();
+                JSONObject json = new JSONObject();    
                 User s = iterator.next();
                 List<Submission> submissions = submissionRepository.findAllByDateuploadBetweenAndSubmitterAndProblemIn(start,end,s, problems);
-                json.put("userName",s.getLogin());
-                json.put("info",groupSubmissions(submissions));
+                //json.put("userName",s.getLogin());
+                
+                
+                json = groupSubmissions(submissions,start);
+                json.put("username", s.getLogin());
                 jarray.put(json);
             }
             
@@ -313,16 +319,25 @@ public class SubmissionService {
         return null;
 
     }
-    public JSONArray groupSubmissions(List<Submission> subs) throws JSONException{
-        JSONObject data = new JSONObject(),status = new JSONObject(); 
+    
+    
+    public JSONObject groupSubmissions(List<Submission> subs, ZonedDateTime start) throws JSONException{
+        
         Veredict ver = Veredict.ACCEPTED; 
+        JSONObject status = new JSONObject(); 
         JSONArray jarray = new JSONArray();
+        JSONObject data = new JSONObject();
+        int accepteds = 0;
+        long total = 0;
         Map<String, List<Submission> > listGrouped = 
         subs.stream().collect(Collectors.groupingBy(s -> s.getProblem().getName()));
         for(String key: listGrouped.keySet() ){
+            System.out.println("----------"+key+"-----"+accepteds);
             JSONObject info = new JSONObject();
+            
             List<Submission> list = listGrouped.get(key);
             Integer count = list.size();
+            
             ZonedDateTime date = null;
             Veredict finalV = null;
             for(Submission q: list) {
@@ -343,14 +358,25 @@ public class SubmissionService {
                     }
                 }
             }
-            info.put("problemName",key);
+        
+            // info.put("problemName",key);
             info.put("cout",count);
-            info.put("date",date); 
+            Duration x = Duration.between(start,date);
+            
+            info.put("date",x.getSeconds()); 
             info.put("veredict", finalV);
-            jarray.put(info);
+            if(finalV == ver) {
+                accepteds++;
+                total+=x.getSeconds();
+            }
+            data.put(key,info);
         }
-        return jarray;
+        status.put("data",data);
+        status.put("totalTime", total);
+        status.put("accepteds",accepteds);
+        return status;
     }
+    
     public JSONObject group(List<Submission> subs) {
         Map<Object, List<Submission>> studlistGrouped =
         subs.stream().collect(Collectors.groupingBy(s -> s.getSubmitter().getLogin()));
@@ -399,9 +425,9 @@ public class SubmissionService {
         return problemsId;
     }
 
-    public Page<SubmissionDTO> getAllSubmission(Pageable pageable){
+    public Page<Submission> getAllSubmission(Pageable pageable){
         Page<Submission> page = submissionRepository.findAll(pageable);
-        Page<SubmissionDTO> pageDTO = page.map(submissionMapper::toDto);
-        return pageDTO;
+        //Page<SubmissionDTO> pageDTO = page.map(submissionMapper::toDto);
+        return page;
     }
 }
