@@ -6,11 +6,22 @@ import com.juez.service.dto.ProblemDTO;
 import com.juez.service.mapper.ProblemMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
+import org.springframework.core.io.UrlResource;
 
 /**
  * Service Implementation for managing Problem.
@@ -83,4 +94,32 @@ public class ProblemService {
         log.debug("Request to delete Problem : {}", id);
         problemRepository.delete(id);
     }
+
+    public Resource loadFileAsResource (String name) {
+        Path filePath = Paths.get(getCurrentDir()+"/utils/problems/" + name + ".pdf");
+        try {
+            Resource resource = new UrlResource(filePath.toUri());
+            if(resource.exists()) {
+                return resource;
+            } else {
+                System.out.println("ERROR doesnt exist");
+            } 
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+        
+    }
+    public String storeFile (MultipartFile file) throws IOException {
+        Path location = Paths.get(getCurrentDir()  + "/utils/problems/"+file.getOriginalFilename());
+        Files.copy(file.getInputStream(), location);
+		return file.getOriginalFilename();
+
+    }
+    
+    public String getCurrentDir() {
+        String currentDir = System.getProperty("user.dir");
+        return currentDir;
+    }    
 }
