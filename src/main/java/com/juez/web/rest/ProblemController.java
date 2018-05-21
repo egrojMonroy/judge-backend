@@ -122,8 +122,8 @@ public class ProblemController {
      */
     @PostMapping("/problems/upload")
     @ResponseBody
-    public ResponseEntity<String> createCode(@RequestPart MultipartFile reportFile) throws URISyntaxException, IOException {
-       String fileName = problemService.storeFile(reportFile);
+    public ResponseEntity<String> createCode(@RequestPart MultipartFile reportFile, @RequestParam String problemId) throws URISyntaxException, IOException {
+       String fileName = problemService.storeFile(reportFile, problemId);
         return ResponseEntity.created(new URI("/api/problems/"+reportFile.getOriginalFilename()))
             .body(fileName);
     }

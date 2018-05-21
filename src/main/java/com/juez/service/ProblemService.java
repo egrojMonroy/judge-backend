@@ -111,11 +111,10 @@ public class ProblemService {
 		return null;
         
     }
-    public String storeFile (MultipartFile file) throws IOException {
-        Path location = Paths.get(getCurrentDir()  + "/utils/problems/"+file.getOriginalFilename());
-        Files.copy(file.getInputStream(), location);
+    public String storeFile (MultipartFile file, String problemId) throws IOException {
+        Path location = Paths.get(getCurrentDir()  + "/utils/problems/"+ problemId+".pdf");
+        Files.copy(file.getInputStream(), location, StandardCopyOption.REPLACE_EXISTING);
 		return file.getOriginalFilename();
-
     }
     
     public String getCurrentDir() {
