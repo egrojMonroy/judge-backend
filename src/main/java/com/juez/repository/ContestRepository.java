@@ -18,7 +18,7 @@ import java.util.List;
 public interface ContestRepository extends JpaRepository<Contest, Long> {
 
     @Query("select contest from Contest contest where contest.creator.login = ?#{principal.username}")
-    List<Contest> findByCreatorIsCurrentUser();
+    Page<Contest> findByCreatorIsCurrentUser(Pageable pageable);
     @Query("select distinct contest from Contest contest left join fetch contest.problems")
     List<Contest> findAllWithEagerRelationships();
 

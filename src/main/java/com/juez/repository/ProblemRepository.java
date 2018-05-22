@@ -15,7 +15,7 @@ import java.util.List;
 public interface ProblemRepository extends JpaRepository<Problem, Long> {
 
     @Query("select problem from Problem problem where problem.creator.login = ?#{principal.username}")
-    List<Problem> findByCreatorIsCurrentUser();
+    Page<Problem> findByCreatorIsCurrentUser(Pageable pageable);
     Page<Problem> findByNameContainingIgnoreCase(String name, Pageable pageable); 
     Problem findById(Long id);
 }

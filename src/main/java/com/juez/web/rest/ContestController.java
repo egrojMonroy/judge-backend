@@ -103,6 +103,21 @@ public class ContestController {
         List<ProblemDTO> page = contestService.getProblemsByContest(contestId);
         return new ResponseEntity<>(page, HttpStatus.OK);   
     }
+   /**
+     * GET  /contests : get all the contests.
+     *
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of contests in body
+     */
+    @GetMapping("/contests/creator")
+    @Timed
+    public ResponseEntity<List<ContestDTO>> getAllContestsByCreator(Pageable pageable) {
+        log.debug("REST request to get a page of Contests");
+        Page<ContestDTO> page = contestService.findAllByCreator(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/contests");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
      /**
      * POST  /contests : C\\
      *

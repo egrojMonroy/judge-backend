@@ -111,6 +111,20 @@ public class ProblemController {
             .body(resource);
     }
 
+     /**
+     * GET  /problems : get all the problems.
+     *
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of problems in body
+     */
+    @GetMapping("/problems/creator")
+    @Timed
+    public ResponseEntity<List<ProblemDTO>> getAllProblemsByCreator(Pageable pageable) {
+        log.debug("REST request to get a page of Problems");
+        Page<ProblemDTO> page = problemService.findAllByCreator(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/problems");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
 
     /**
      * POST  /codes : Create a new code.

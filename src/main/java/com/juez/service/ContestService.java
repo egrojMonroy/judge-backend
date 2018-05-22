@@ -74,7 +74,18 @@ public class ContestService {
         return contestRepository.findAll(pageable)
             .map(contestMapper::toDto);
     }
-
+    /**
+     * Get all the contests.
+     *
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public Page<ContestDTO> findAllByCreator(Pageable pageable) {
+        log.debug("Request to get all Contests");
+        return contestRepository.findByCreatorIsCurrentUser(pageable)
+                .map(contestMapper::toDto);
+    }
     /**
      * Get one contest by id.
      *

@@ -4,6 +4,8 @@ import com.juez.domain.Problem;
 import com.juez.repository.ProblemRepository;
 import com.juez.service.dto.ProblemDTO;
 import com.juez.service.mapper.ProblemMapper;
+
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -71,7 +73,18 @@ public class ProblemService {
         return problemRepository.findAll(pageable)
             .map(problemMapper::toDto);
     }
-
+   /**
+     * Get all the problems.
+     *
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public Page<ProblemDTO> findAllByCreator(Pageable pageable) {
+        log.debug("Request to get all Problems");
+        return problemRepository.findByCreatorIsCurrentUser(pageable)
+            .map(problemMapper::toDto);
+    }
     /**
      * Get one problem by id.
      *
@@ -100,6 +113,7 @@ public class ProblemService {
         try {
             Resource resource = new UrlResource(filePath.toUri());
             if(resource.exists()) {
+                //byte[] encoded = Base64.encodeBase64(resource.getFile());
                 return resource;
             } else {
                 System.out.println("ERROR doesnt exist");
@@ -112,7 +126,9 @@ public class ProblemService {
         
     }
     public String storeFile (MultipartFile file, String problemId) throws IOException {
+        System.out.println(problemId + " ARRRRRRY");
         Path location = Paths.get(getCurrentDir()  + "/utils/problems/"+ problemId+".pdf");
+        System.out.println("AFS :"+ location);
         Files.copy(file.getInputStream(), location, StandardCopyOption.REPLACE_EXISTING);
 		return file.getOriginalFilename();
     }
