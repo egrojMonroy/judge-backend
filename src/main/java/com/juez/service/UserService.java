@@ -1,6 +1,7 @@
 package com.juez.service;
 
 import com.juez.domain.Authority;
+import com.juez.domain.Ranking;
 import com.juez.domain.User;
 import com.juez.repository.AuthorityRepository;
 import com.juez.config.Constants;
@@ -220,7 +221,10 @@ public class UserService {
     public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
         return userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER).map(UserDTO::new);
     }
-
+    @Transactional(readOnly = true)
+    public List<Object[]> getAllRankingUser(Pageable pageable) {
+        return userRepository.getRanking();
+    }
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthoritiesByLogin(String login) {
         return userRepository.findOneWithAuthoritiesByLogin(login);

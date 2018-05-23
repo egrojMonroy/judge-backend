@@ -1,11 +1,13 @@
 package com.juez.repository;
 
 import com.juez.domain.User;
+import com.juez.domain.Ranking;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
@@ -35,5 +37,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findOneWithAuthoritiesByLogin(String login);
 
     Page<User> findAllByLoginNot(Pageable pageable, String login);
-
+    
+    @Query(value = "select a.login, count(b.id) from jhi_user a inner join submission b on a.id = b.submitter_id  where b.status = 'ACCEPTED' group by a.id order by count(b.id) DESC ", nativeQuery = true)
+    List<Object[]> getRanking();
 }
