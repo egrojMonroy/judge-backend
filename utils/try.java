@@ -1,27 +1,24 @@
-@Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+n=0
+cd $6
 
-    Optional<User> findOneByActivationKey(String activationKey);
+# 1 File nam  without extention 
+# 2 Compile name without extention
+# 3 in name 
+# 4 out name 
+# 5 output
+# 6 filefolder of code and output 
+# 7 timelimit
+if ! g++ $1.cpp -o $2 -fno-asm -O2 -Wall -lm --static -std=c++11 -DONLINE_JUDGE; then 
+echo "Compilation Error";
+exit 1;
+fi  
 
-    List<User> findAllByActivatedIsFalseAndCreatedDateBefore(Instant dateTime);
+(timeout $7s ./$2 < $3 > $4.out   || ( [ $? -eq 124 ] && echo timeout && exit 1) ) || (echo runtime && exit 1)
 
-    Optional<User> findOneByResetKey(String resetKey);
 
-    Optional<User> findOneByEmail(String email);
 
-    Optional<User> findOneByLogin(String login);
-
-    @EntityGraph(attributePaths = "authorities")
-    User findOneWithAuthoritiesById(Long id);
-
-    @EntityGraph(attributePaths = "authorities")
-    @Cacheable(cacheNames="users")
-    Optional<User> findOneWithAuthoritiesByLogin(String login);
-
-    Page<User> findAllByLoginNot(Pageable pageable, String login);
-    
-    @Query(value = "select a.login, count(b.id) from jhi_user a" +
-           "inner join submission b on a.id = b.submitter_id  "+
-           "where b.status = 'ACCEPTED' group by a.id order by count(b.id) DESC ", nativeQuery = true)
-    List<Object[]> getRanking();
-}
+if ! diff -bwB $5 $4.out &>/dev/null; then
+  echo "Wrong answer"
+else 
+  echo "Accepted"
+fi
