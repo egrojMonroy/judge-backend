@@ -8,7 +8,7 @@ cd $6
 # 5 output
 # 6 filefolder of code and output 
 # 7 timelimit
-if ! g++ $1.cpp -o $2 -fno-asm -O2 -Wall -lm --static -std=c++11 -DONLINE_JUDGE; then 
+if ! g++ $1.cpp -o $2 -O2 -Wall -lm --static -std=c++11 -DONLINE_JUDGE; then 
 echo "Compilation Error";
 exit 1;
 fi  
