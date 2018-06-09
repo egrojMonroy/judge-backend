@@ -31,6 +31,9 @@ public class Contest implements Serializable {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "jhi_password")
+    private String password;
+
     @Column(name = "startdate")
     private ZonedDateTime startdate;
 
@@ -54,7 +57,7 @@ public class Contest implements Serializable {
                inverseJoinColumns = @JoinColumn(name="problems_id", referencedColumnName="id"))
     private Set<Problem> problems = new HashSet<>();
 
-    @ManyToMany(mappedBy = "contests")
+    @ManyToMany(mappedBy = "contests", cascade = CascadeType.ALL)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Coder> coders = new HashSet<>();
@@ -79,6 +82,19 @@ public class Contest implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Contest password(String password) {
+        this.password = password;
+        return this;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public ZonedDateTime getStartdate() {
@@ -209,6 +225,7 @@ public class Contest implements Serializable {
         return "Contest{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", password='" + getPassword() + "'" +
             ", startdate='" + getStartdate() + "'" +
             ", enddate='" + getEnddate() + "'" +
             ", type='" + getType() + "'" +

@@ -21,4 +21,5 @@ public interface CoderRepository extends JpaRepository<Coder, Long> {
 
     Coder findOneByUser_id(Long id);
     Coder findOneByContests_IdAndUser_Login(Long id, String username);
+    Long deleteByContests_Id(Long id);
 }

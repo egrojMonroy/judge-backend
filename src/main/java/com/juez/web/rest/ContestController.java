@@ -13,7 +13,7 @@ import com.juez.service.dto.ProblemDTO;
 import com.juez.service.mapper.ContestMapper;
 import com.juez.service.mapper.ProblemMapper;
 import com.juez.service.ContestService;
-import io.github.jhipster.web.util.ResponseUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -136,5 +136,18 @@ public class ContestController {
         return ResponseEntity.created(new URI("/api/contests/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+    /**
+     * POST  /contests : C\\
+     *
+     * @param contestDTO the contestDTO to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new contestDTO, or with status 400 (Bad Request) if the contest has already an ID
+     * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
+    @PostMapping("/contests/verify")
+    @Timed
+    public boolean checkPassword(@RequestParam Long contestId, @RequestParam String password) throws URISyntaxException {
+        boolean check = contestService.checkPass(contestId, password);
+        return check;
     }
 }

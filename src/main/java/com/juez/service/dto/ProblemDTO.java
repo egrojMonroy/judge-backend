@@ -1,7 +1,6 @@
 package com.juez.service.dto;
 
 
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,14 +19,7 @@ public class ProblemDTO implements Serializable {
 
     private Integer level;
 
-    @Size(max = 3000)
-    private String definition;
-
-    @Size(max = 2000)
-    private String inputDef;
-
-    @Size(max = 2000)
-    private String outputDef;
+    private String location;
 
     private Long solutionId;
 
@@ -65,28 +57,12 @@ public class ProblemDTO implements Serializable {
         this.level = level;
     }
 
-    public String getDefinition() {
-        return definition;
+    public String getLocation() {
+        return location;
     }
 
-    public void setDefinition(String definition) {
-        this.definition = definition;
-    }
-
-    public String getInputDef() {
-        return inputDef;
-    }
-
-    public void setInputDef(String inputDef) {
-        this.inputDef = inputDef;
-    }
-
-    public String getOutputDef() {
-        return outputDef;
-    }
-
-    public void setOutputDef(String outputDef) {
-        this.outputDef = outputDef;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public Long getSolutionId() {
@@ -133,9 +109,7 @@ public class ProblemDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", timelimit=" + getTimelimit() +
             ", level=" + getLevel() +
-            ", definition='" + getDefinition() + "'" +
-            ", inputDef='" + getInputDef() + "'" +
-            ", outputDef='" + getOutputDef() + "'" +
+            ", location='" + getLocation() + "'" +
             "}";
     }
 }

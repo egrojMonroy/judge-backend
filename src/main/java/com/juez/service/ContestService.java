@@ -8,7 +8,9 @@ import java.util.Set;
 import com.juez.domain.Contest;
 import com.juez.domain.Problem;
 import com.juez.domain.User;
+import com.juez.repository.CoderRepository;
 import com.juez.repository.ContestRepository;
+import com.juez.repository.ProblemRepository;
 import com.juez.service.dto.ContestDTO;
 import com.juez.service.dto.ProblemDTO;
 import com.juez.service.mapper.ContestMapper;
@@ -19,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.juez.service.mapper.ProblemMapper;
@@ -37,15 +40,21 @@ public class ContestService {
     private final ContestMapper contestMapper;
     private final UserService userService;
     private final ProblemMapper problemMapper;
+    private final CoderRepository coderRepository;
+    private final ProblemRepository problemRepository;
     public ContestService(
         ContestRepository contestRepository, 
         ContestMapper contestMapper,
         UserService userService,
-        ProblemMapper problemMapper) {
+        ProblemMapper problemMapper,
+        CoderRepository coderRepository,
+        ProblemRepository problemRepository) {
         this.contestRepository = contestRepository;
         this.contestMapper = contestMapper;
         this.userService = userService;
         this.problemMapper = problemMapper;
+        this.coderRepository = coderRepository;
+        this.problemRepository = problemRepository;
     }
 
     /**
@@ -128,4 +137,23 @@ public class ContestService {
         problemsList.addAll(problems);
         return problemMapper.toDto(problemsList);
     } 
+    public boolean checkPass(Long contestId, String password ) {
+        Contest contest = contestRepository.findOne(contestId);
+        System.out.println("contestid " + password);
+        String passwordContet = contest.getPassword();
+        
+        if(passwordContet == null){
+            System.out.println("IS NULL ******************************************");
+        } else {
+            System.out.println("NO NULL *****************************************");
+        }
+
+        if(password.equalsIgnoreCase(passwordContet) || passwordContet == null){
+            System.out.println("PASSWORD TRUE ");
+            return true;
+        } else {
+            System.out.println("PASWORD FALSE");
+            return false;
+        }
+    }
 }

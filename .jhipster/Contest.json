@@ -30,6 +30,10 @@
             "fieldType": "String"
         },
         {
+            "fieldName": "password",
+            "fieldType": "String"
+        },
+        {
             "fieldName": "startdate",
             "fieldType": "ZonedDateTime"
         },

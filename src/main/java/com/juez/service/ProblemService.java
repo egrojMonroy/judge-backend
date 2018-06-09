@@ -125,6 +125,23 @@ public class ProblemService {
 		return null;
         
     }
+    public Resource loadSampleAsResource () {
+        Path filePath = Paths.get(getCurrentDir()+"/utils/test.doc");
+        try {
+            Resource resource = new UrlResource(filePath.toUri());
+            if(resource.exists()) {
+                System.out.println("-----------------------------------------------------works");
+                return resource;
+            } else {
+                System.out.println("ERROR doesnt exist");
+            } 
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+        
+    }
     public String storeFile (MultipartFile file, String problemId) throws IOException {
         System.out.println(problemId + " ARRRRRRY");
         Path location = Paths.get(getCurrentDir()  + "/utils/problems/"+ problemId+".pdf");

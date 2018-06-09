@@ -49,28 +49,8 @@
             "fieldType": "Integer"
         },
         {
-            "fieldName": "definition",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "maxlength"
-            ],
-            "fieldValidateRulesMaxlength": 3000
-        },
-        {
-            "fieldName": "inputDef",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "maxlength"
-            ],
-            "fieldValidateRulesMaxlength": 2000
-        },
-        {
-            "fieldName": "outputDef",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "maxlength"
-            ],
-            "fieldValidateRulesMaxlength": 2000
+            "fieldName": "location",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20180406140138",

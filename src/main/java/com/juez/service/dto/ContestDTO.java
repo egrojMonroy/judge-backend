@@ -16,6 +16,8 @@ public class ContestDTO implements Serializable {
 
     private String name;
 
+    private String password;
+
     private ZonedDateTime startdate;
 
     private ZonedDateTime enddate;
@@ -40,6 +42,14 @@ public class ContestDTO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public ZonedDateTime getStartdate() {
@@ -108,6 +118,7 @@ public class ContestDTO implements Serializable {
         return "ContestDTO{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", password='" + getPassword() + "'" +
             ", startdate='" + getStartdate() + "'" +
             ", enddate='" + getEnddate() + "'" +
             ", type='" + getType() + "'" +

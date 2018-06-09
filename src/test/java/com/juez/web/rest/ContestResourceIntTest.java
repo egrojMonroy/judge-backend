@@ -49,6 +49,9 @@ public class ContestResourceIntTest {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
+    private static final String DEFAULT_PASSWORD = "AAAAAAAAAA";
+    private static final String UPDATED_PASSWORD = "BBBBBBBBBB";
+
     private static final ZonedDateTime DEFAULT_STARTDATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_STARTDATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
@@ -103,6 +106,7 @@ public class ContestResourceIntTest {
     public static Contest createEntity(EntityManager em) {
         Contest contest = new Contest()
             .name(DEFAULT_NAME)
+            .password(DEFAULT_PASSWORD)
             .startdate(DEFAULT_STARTDATE)
             .enddate(DEFAULT_ENDDATE)
             .type(DEFAULT_TYPE);
@@ -131,6 +135,7 @@ public class ContestResourceIntTest {
         assertThat(contestList).hasSize(databaseSizeBeforeCreate + 1);
         Contest testContest = contestList.get(contestList.size() - 1);
         assertThat(testContest.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testContest.getPassword()).isEqualTo(DEFAULT_PASSWORD);
         assertThat(testContest.getStartdate()).isEqualTo(DEFAULT_STARTDATE);
         assertThat(testContest.getEnddate()).isEqualTo(DEFAULT_ENDDATE);
         assertThat(testContest.getType()).isEqualTo(DEFAULT_TYPE);
@@ -168,6 +173,7 @@ public class ContestResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(contest.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
+            .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD.toString())))
             .andExpect(jsonPath("$.[*].startdate").value(hasItem(sameInstant(DEFAULT_STARTDATE))))
             .andExpect(jsonPath("$.[*].enddate").value(hasItem(sameInstant(DEFAULT_ENDDATE))))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
@@ -185,6 +191,7 @@ public class ContestResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(contest.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
+            .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD.toString()))
             .andExpect(jsonPath("$.startdate").value(sameInstant(DEFAULT_STARTDATE)))
             .andExpect(jsonPath("$.enddate").value(sameInstant(DEFAULT_ENDDATE)))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()));
@@ -211,6 +218,7 @@ public class ContestResourceIntTest {
         em.detach(updatedContest);
         updatedContest
             .name(UPDATED_NAME)
+            .password(UPDATED_PASSWORD)
             .startdate(UPDATED_STARTDATE)
             .enddate(UPDATED_ENDDATE)
             .type(UPDATED_TYPE);
@@ -226,6 +234,7 @@ public class ContestResourceIntTest {
         assertThat(contestList).hasSize(databaseSizeBeforeUpdate);
         Contest testContest = contestList.get(contestList.size() - 1);
         assertThat(testContest.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testContest.getPassword()).isEqualTo(UPDATED_PASSWORD);
         assertThat(testContest.getStartdate()).isEqualTo(UPDATED_STARTDATE);
         assertThat(testContest.getEnddate()).isEqualTo(UPDATED_ENDDATE);
         assertThat(testContest.getType()).isEqualTo(UPDATED_TYPE);

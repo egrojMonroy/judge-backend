@@ -5,7 +5,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -36,17 +35,8 @@ public class Problem implements Serializable {
     @Column(name = "jhi_level")
     private Integer level;
 
-    @Size(max = 3000)
-    @Column(name = "definition", length = 3000)
-    private String definition;
-
-    @Size(max = 2000)
-    @Column(name = "input_def", length = 2000)
-    private String inputDef;
-
-    @Size(max = 2000)
-    @Column(name = "output_def", length = 2000)
-    private String outputDef;
+    @Column(name = "location")
+    private String location;
 
     @OneToOne
     @JoinColumn(unique = true)
@@ -65,7 +55,7 @@ public class Problem implements Serializable {
     @ManyToOne
     private User creator;
 
-    @ManyToMany(mappedBy = "problems")
+    @ManyToMany(mappedBy = "problems", cascade = CascadeType.ALL)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Contest> contests = new HashSet<>();
@@ -118,43 +108,17 @@ public class Problem implements Serializable {
         this.level = level;
     }
 
-    public String getDefinition() {
-        return definition;
+    public String getLocation() {
+        return location;
     }
 
-    public Problem definition(String definition) {
-        this.definition = definition;
+    public Problem location(String location) {
+        this.location = location;
         return this;
     }
 
-    public void setDefinition(String definition) {
-        this.definition = definition;
-    }
-
-    public String getInputDef() {
-        return inputDef;
-    }
-
-    public Problem inputDef(String inputDef) {
-        this.inputDef = inputDef;
-        return this;
-    }
-
-    public void setInputDef(String inputDef) {
-        this.inputDef = inputDef;
-    }
-
-    public String getOutputDef() {
-        return outputDef;
-    }
-
-    public Problem outputDef(String outputDef) {
-        this.outputDef = outputDef;
-        return this;
-    }
-
-    public void setOutputDef(String outputDef) {
-        this.outputDef = outputDef;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public Code getSolution() {
@@ -286,9 +250,7 @@ public class Problem implements Serializable {
             ", name='" + getName() + "'" +
             ", timelimit=" + getTimelimit() +
             ", level=" + getLevel() +
-            ", definition='" + getDefinition() + "'" +
-            ", inputDef='" + getInputDef() + "'" +
-            ", outputDef='" + getOutputDef() + "'" +
+            ", location='" + getLocation() + "'" +
             "}";
     }
 }

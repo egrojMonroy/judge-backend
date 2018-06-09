@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -49,7 +48,7 @@ public class ProblemResource {
      */
     @PostMapping("/problems")
     @Timed
-    public ResponseEntity<ProblemDTO> createProblem(@Valid @RequestBody ProblemDTO problemDTO) throws URISyntaxException {
+    public ResponseEntity<ProblemDTO> createProblem(@RequestBody ProblemDTO problemDTO) throws URISyntaxException {
         log.debug("REST request to save Problem : {}", problemDTO);
         if (problemDTO.getId() != null) {
             throw new BadRequestAlertException("A new problem cannot already have an ID", ENTITY_NAME, "idexists");
@@ -71,7 +70,7 @@ public class ProblemResource {
      */
     @PutMapping("/problems")
     @Timed
-    public ResponseEntity<ProblemDTO> updateProblem(@Valid @RequestBody ProblemDTO problemDTO) throws URISyntaxException {
+    public ResponseEntity<ProblemDTO> updateProblem(@RequestBody ProblemDTO problemDTO) throws URISyntaxException {
         log.debug("REST request to update Problem : {}", problemDTO);
         if (problemDTO.getId() == null) {
             return createProblem(problemDTO);

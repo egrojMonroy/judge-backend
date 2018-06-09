@@ -110,6 +110,24 @@ public class ProblemController {
             .contentType(MediaType.parseMediaType(contentType))
             .body(resource);
     }
+    /**
+     * GET  /asset-types/:name and description
+     *
+     * @param name the name of the assetTypeDTO to retrieve
+     * @param description the description of the assetTypeDTO to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the assetTypeDTO, or with status 404 (Not Found)
+     */
+   
+    @GetMapping("/problems/download/sample")
+    @Timed 
+    public ResponseEntity<Resource> getSamplePDF() {
+        log.debug("REST request to get problems : {}");
+        Resource resource = problemService.loadSampleAsResource();
+        String contentType = "application/msword";
+        return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(contentType))
+            .body(resource);
+    }
 
      /**
      * GET  /problems : get all the problems.

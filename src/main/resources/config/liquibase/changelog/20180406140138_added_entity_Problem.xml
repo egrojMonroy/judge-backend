@@ -33,15 +33,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="definition" type="varchar(3000)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="input_def" type="varchar(2000)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="output_def" type="varchar(2000)">
+            <column name="location" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="solution_id" type="bigint">

@@ -18,4 +18,5 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
     Page<Problem> findByCreatorIsCurrentUser(Pageable pageable);
     Page<Problem> findByNameContainingIgnoreCase(String name, Pageable pageable); 
     Problem findById(Long id);
+    Long deleteByContests_id(Long id);
 }
