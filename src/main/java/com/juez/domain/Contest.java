@@ -1,6 +1,5 @@
 package com.juez.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -43,6 +42,9 @@ public class Contest implements Serializable {
     @Column(name = "jhi_type")
     private String type;
 
+    @Column(name = "active")
+    private Boolean active;
+
     @ManyToOne
     private User creator;
 
@@ -57,9 +59,15 @@ public class Contest implements Serializable {
                inverseJoinColumns = @JoinColumn(name="problems_id", referencedColumnName="id"))
     private Set<Problem> problems = new HashSet<>();
 
-    @ManyToMany(mappedBy = "contests", cascade = CascadeType.ALL)
-    @JsonIgnore
+    /**
+     * Registered coders in contest
+     */
+    @ApiModelProperty(value = "Registered coders in contest")
+    @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JoinTable(name = "contest_coder",
+               joinColumns = @JoinColumn(name="contests_id", referencedColumnName="id"),
+               inverseJoinColumns = @JoinColumn(name="coders_id", referencedColumnName="id"))
     private Set<Coder> coders = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -134,6 +142,19 @@ public class Contest implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Boolean isActive() {
+        return active;
+    }
+
+    public Contest active(Boolean active) {
+        this.active = active;
+        return this;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public User getCreator() {
@@ -229,6 +250,7 @@ public class Contest implements Serializable {
             ", startdate='" + getStartdate() + "'" +
             ", enddate='" + getEnddate() + "'" +
             ", type='" + getType() + "'" +
+            ", active='" + isActive() + "'" +
             "}";
     }
 }

@@ -1,6 +1,6 @@
 package com.juez.domain;
 
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -33,15 +33,9 @@ public class Coder implements Serializable {
     @JoinColumn(unique = true)
     private User user;
 
-    /**
-     * Registered coders in contest
-     */
-    @ApiModelProperty(value = "Registered coders in contest")
-    @ManyToMany
+    @ManyToMany(mappedBy = "coders")
+    @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @JoinTable(name = "coder_contest",
-               joinColumns = @JoinColumn(name="coders_id", referencedColumnName="id"),
-               inverseJoinColumns = @JoinColumn(name="contests_id", referencedColumnName="id"))
     private Set<Contest> contests = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

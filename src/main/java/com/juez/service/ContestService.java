@@ -110,14 +110,14 @@ public class ContestService {
     
     public Page<ContestDTO> findAllBeforeEndDate(Pageable pageable){
         ZonedDateTime dateTime = ZonedDateTime.now();
-        dateTime = dateTime.minusHours(19);
-        return contestRepository.findByEnddateBefore( dateTime, pageable).map(contestMapper::toDto);
+        // dateTime = dateTime.minusHours(19);
+        return contestRepository.findByEnddateBeforeAndActiveIs( dateTime, true, pageable).map(contestMapper::toDto);
     }
     public Page<ContestDTO> findAllRunning(Pageable pageable){
         ZonedDateTime dateTime = ZonedDateTime.now();
-        dateTime = dateTime.minusHours(19);
-        System.out.println("TUNNNIN"+dateTime);
-        return contestRepository.findByStartdateAfterOrEnddateAfter(dateTime,dateTime, pageable).map(contestMapper::toDto);
+        // dateTime = dateTime.minusHours(19);
+        // System.out.println("TUNNNIN"+dateTime);
+        return contestRepository.findByStartdateAfterAndActiveIsOrEnddateAfterAndActiveIs(dateTime,true,dateTime, true, pageable).map(contestMapper::toDto);
     }
     /**
      * Delete the contest by id.
@@ -134,7 +134,10 @@ public class ContestService {
         Contest contest = contestRepository.findOne(contestId);
         Set<Problem> problems = contest.getProblems();
         List<Problem> problemsList = new ArrayList<Problem>() ; 
-        problemsList.addAll(problems);
+        for(Problem pr: problems ) {
+            if(pr.isActive())
+                problemsList.add(pr);
+        }
         return problemMapper.toDto(problemsList);
     } 
     public boolean checkPass(Long contestId, String password ) {

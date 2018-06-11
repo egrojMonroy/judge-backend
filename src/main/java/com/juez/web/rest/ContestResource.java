@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -54,8 +53,6 @@ public class ContestResource {
         if (contestDTO.getId() != null) {
             throw new BadRequestAlertException("A new contest cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        // String hassPass = BCrypt.hashpw(contestDTO.getPassword(), BCrypt.gensalt());
-        // contestDTO.setPassword(hassPass); 
         ContestDTO result = contestService.save(contestDTO);
         return ResponseEntity.created(new URI("/api/contests/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))

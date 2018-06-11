@@ -25,15 +25,15 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="active" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
             <column name="timelimit" type="integer">
                 <constraints nullable="true" />
             </column>
 
             <column name="jhi_level" type="integer">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="location" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="solution_id" type="bigint">

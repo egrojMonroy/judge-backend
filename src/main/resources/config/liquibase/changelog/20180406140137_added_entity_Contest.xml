@@ -41,6 +41,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="active" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
             <column name="creator_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -60,6 +64,17 @@
         </createTable>
 
         <addPrimaryKey columnNames="contests_id, problems_id" tableName="contest_problem"/>
+        
+        <createTable tableName="contest_coder">
+            <column name="coders_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contests_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="contests_id, coders_id" tableName="contest_coder"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->

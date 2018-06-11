@@ -44,14 +44,14 @@ public class ProblemResourceIntTest {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_ACTIVE = false;
+    private static final Boolean UPDATED_ACTIVE = true;
+
     private static final Integer DEFAULT_TIMELIMIT = 1;
     private static final Integer UPDATED_TIMELIMIT = 2;
 
     private static final Integer DEFAULT_LEVEL = 1;
     private static final Integer UPDATED_LEVEL = 2;
-
-    private static final String DEFAULT_LOCATION = "AAAAAAAAAA";
-    private static final String UPDATED_LOCATION = "BBBBBBBBBB";
 
     @Autowired
     private ProblemRepository problemRepository;
@@ -98,9 +98,9 @@ public class ProblemResourceIntTest {
     public static Problem createEntity(EntityManager em) {
         Problem problem = new Problem()
             .name(DEFAULT_NAME)
+            .active(DEFAULT_ACTIVE)
             .timelimit(DEFAULT_TIMELIMIT)
-            .level(DEFAULT_LEVEL)
-            .location(DEFAULT_LOCATION);
+            .level(DEFAULT_LEVEL);
         return problem;
     }
 
@@ -126,9 +126,9 @@ public class ProblemResourceIntTest {
         assertThat(problemList).hasSize(databaseSizeBeforeCreate + 1);
         Problem testProblem = problemList.get(problemList.size() - 1);
         assertThat(testProblem.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testProblem.isActive()).isEqualTo(DEFAULT_ACTIVE);
         assertThat(testProblem.getTimelimit()).isEqualTo(DEFAULT_TIMELIMIT);
         assertThat(testProblem.getLevel()).isEqualTo(DEFAULT_LEVEL);
-        assertThat(testProblem.getLocation()).isEqualTo(DEFAULT_LOCATION);
     }
 
     @Test
@@ -163,9 +163,9 @@ public class ProblemResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(problem.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
+            .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE.booleanValue())))
             .andExpect(jsonPath("$.[*].timelimit").value(hasItem(DEFAULT_TIMELIMIT)))
-            .andExpect(jsonPath("$.[*].level").value(hasItem(DEFAULT_LEVEL)))
-            .andExpect(jsonPath("$.[*].location").value(hasItem(DEFAULT_LOCATION.toString())));
+            .andExpect(jsonPath("$.[*].level").value(hasItem(DEFAULT_LEVEL)));
     }
 
     @Test
@@ -180,9 +180,9 @@ public class ProblemResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(problem.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
+            .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE.booleanValue()))
             .andExpect(jsonPath("$.timelimit").value(DEFAULT_TIMELIMIT))
-            .andExpect(jsonPath("$.level").value(DEFAULT_LEVEL))
-            .andExpect(jsonPath("$.location").value(DEFAULT_LOCATION.toString()));
+            .andExpect(jsonPath("$.level").value(DEFAULT_LEVEL));
     }
 
     @Test
@@ -206,9 +206,9 @@ public class ProblemResourceIntTest {
         em.detach(updatedProblem);
         updatedProblem
             .name(UPDATED_NAME)
+            .active(UPDATED_ACTIVE)
             .timelimit(UPDATED_TIMELIMIT)
-            .level(UPDATED_LEVEL)
-            .location(UPDATED_LOCATION);
+            .level(UPDATED_LEVEL);
         ProblemDTO problemDTO = problemMapper.toDto(updatedProblem);
 
         restProblemMockMvc.perform(put("/api/problems")
@@ -221,9 +221,9 @@ public class ProblemResourceIntTest {
         assertThat(problemList).hasSize(databaseSizeBeforeUpdate);
         Problem testProblem = problemList.get(problemList.size() - 1);
         assertThat(testProblem.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testProblem.isActive()).isEqualTo(UPDATED_ACTIVE);
         assertThat(testProblem.getTimelimit()).isEqualTo(UPDATED_TIMELIMIT);
         assertThat(testProblem.getLevel()).isEqualTo(UPDATED_LEVEL);
-        assertThat(testProblem.getLocation()).isEqualTo(UPDATED_LOCATION);
     }
 
     @Test

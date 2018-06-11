@@ -63,11 +63,11 @@ public class ProblemController {
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of problems in body
      */
-    @GetMapping("/problema")
+    @GetMapping("/problems/active")
     @Timed
     public ResponseEntity<List<ProblemDTO>> getAllProblems(Pageable pageable) {
         log.debug("REST request to get a page of Problems");
-        Page<Problem> page = problemRepository.findAll(pageable);
+        Page<Problem> page = problemRepository.findByActive(true,pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/problems");
         return new ResponseEntity<>(problemMapper.toDto(page.getContent()), headers, HttpStatus.OK);
     }
@@ -85,7 +85,7 @@ public class ProblemController {
     @Timed 
     public ResponseEntity<List<ProblemDTO>> getProblemByName(@RequestParam String name , Pageable pageable) {
         log.debug("REST request to get problems : {}", name);
-        Page<Problem> problems = problemRepository.findByNameContainingIgnoreCase(name, pageable);
+        Page<Problem> problems = problemRepository.findByNameContainingIgnoreCaseAndActive(name, true, pageable);
         Page<ProblemDTO> page = problems.map(problemMapper::toDto);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/asset-types");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);

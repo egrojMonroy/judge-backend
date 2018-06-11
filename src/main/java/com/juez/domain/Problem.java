@@ -29,14 +29,14 @@ public class Problem implements Serializable {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "active")
+    private Boolean active;
+
     @Column(name = "timelimit")
     private Integer timelimit;
 
     @Column(name = "jhi_level")
     private Integer level;
-
-    @Column(name = "location")
-    private String location;
 
     @OneToOne
     @JoinColumn(unique = true)
@@ -82,6 +82,19 @@ public class Problem implements Serializable {
         this.name = name;
     }
 
+    public Boolean isActive() {
+        return active;
+    }
+
+    public Problem active(Boolean active) {
+        this.active = active;
+        return this;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     public Integer getTimelimit() {
         return timelimit;
     }
@@ -106,19 +119,6 @@ public class Problem implements Serializable {
 
     public void setLevel(Integer level) {
         this.level = level;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public Problem location(String location) {
-        this.location = location;
-        return this;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public Code getSolution() {
@@ -248,9 +248,9 @@ public class Problem implements Serializable {
         return "Problem{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", active='" + isActive() + "'" +
             ", timelimit=" + getTimelimit() +
             ", level=" + getLevel() +
-            ", location='" + getLocation() + "'" +
             "}";
     }
 }

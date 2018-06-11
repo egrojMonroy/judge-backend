@@ -14,16 +14,5 @@
                                  referencedColumnNames="id"
                                  referencedTableName="jhi_user"/>
 
-        <addForeignKeyConstraint baseColumnNames="coders_id"
-                                 baseTableName="coder_contest"
-                                 constraintName="fk_coder_contest_coders_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="coder"/>
-        <addForeignKeyConstraint baseColumnNames="contests_id"
-                                 baseTableName="coder_contest"
-                                 constraintName="fk_coder_contest_contests_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="contest"/>
-        
     </changeSet>
 </databaseChangeLog>

@@ -25,5 +25,16 @@
                                  referencedColumnNames="id"
                                  referencedTableName="problem"/>
         
+        <addForeignKeyConstraint baseColumnNames="contests_id"
+                                 baseTableName="contest_coder"
+                                 constraintName="fk_contest_coder_contests_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="contest"/>
+        <addForeignKeyConstraint baseColumnNames="coders_id"
+                                 baseTableName="contest_coder"
+                                 constraintName="fk_contest_coder_coders_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="coder"/>
+        
     </changeSet>
 </databaseChangeLog>

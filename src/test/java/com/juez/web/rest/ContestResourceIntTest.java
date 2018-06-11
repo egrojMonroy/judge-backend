@@ -61,6 +61,9 @@ public class ContestResourceIntTest {
     private static final String DEFAULT_TYPE = "AAAAAAAAAA";
     private static final String UPDATED_TYPE = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_ACTIVE = false;
+    private static final Boolean UPDATED_ACTIVE = true;
+
     @Autowired
     private ContestRepository contestRepository;
 
@@ -109,7 +112,8 @@ public class ContestResourceIntTest {
             .password(DEFAULT_PASSWORD)
             .startdate(DEFAULT_STARTDATE)
             .enddate(DEFAULT_ENDDATE)
-            .type(DEFAULT_TYPE);
+            .type(DEFAULT_TYPE)
+            .active(DEFAULT_ACTIVE);
         return contest;
     }
 
@@ -139,6 +143,7 @@ public class ContestResourceIntTest {
         assertThat(testContest.getStartdate()).isEqualTo(DEFAULT_STARTDATE);
         assertThat(testContest.getEnddate()).isEqualTo(DEFAULT_ENDDATE);
         assertThat(testContest.getType()).isEqualTo(DEFAULT_TYPE);
+        assertThat(testContest.isActive()).isEqualTo(DEFAULT_ACTIVE);
     }
 
     @Test
@@ -176,7 +181,8 @@ public class ContestResourceIntTest {
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD.toString())))
             .andExpect(jsonPath("$.[*].startdate").value(hasItem(sameInstant(DEFAULT_STARTDATE))))
             .andExpect(jsonPath("$.[*].enddate").value(hasItem(sameInstant(DEFAULT_ENDDATE))))
-            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE.booleanValue())));
     }
 
     @Test
@@ -194,7 +200,8 @@ public class ContestResourceIntTest {
             .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD.toString()))
             .andExpect(jsonPath("$.startdate").value(sameInstant(DEFAULT_STARTDATE)))
             .andExpect(jsonPath("$.enddate").value(sameInstant(DEFAULT_ENDDATE)))
-            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()));
+            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
+            .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE.booleanValue()));
     }
 
     @Test
@@ -221,7 +228,8 @@ public class ContestResourceIntTest {
             .password(UPDATED_PASSWORD)
             .startdate(UPDATED_STARTDATE)
             .enddate(UPDATED_ENDDATE)
-            .type(UPDATED_TYPE);
+            .type(UPDATED_TYPE)
+            .active(UPDATED_ACTIVE);
         ContestDTO contestDTO = contestMapper.toDto(updatedContest);
 
         restContestMockMvc.perform(put("/api/contests")
@@ -238,6 +246,7 @@ public class ContestResourceIntTest {
         assertThat(testContest.getStartdate()).isEqualTo(UPDATED_STARTDATE);
         assertThat(testContest.getEnddate()).isEqualTo(UPDATED_ENDDATE);
         assertThat(testContest.getType()).isEqualTo(UPDATED_TYPE);
+        assertThat(testContest.isActive()).isEqualTo(UPDATED_ACTIVE);
     }
 
     @Test

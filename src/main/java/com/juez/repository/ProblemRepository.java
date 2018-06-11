@@ -14,9 +14,10 @@ import java.util.List;
 @Repository
 public interface ProblemRepository extends JpaRepository<Problem, Long> {
 
-    @Query("select problem from Problem problem where problem.creator.login = ?#{principal.username}")
+    @Query("select problem from Problem problem where problem.creator.login = ?#{principal.username} and problem.active = true")
     Page<Problem> findByCreatorIsCurrentUser(Pageable pageable);
-    Page<Problem> findByNameContainingIgnoreCase(String name, Pageable pageable); 
+    Page<Problem> findByNameContainingIgnoreCaseAndActive(String name,Boolean active ,Pageable pageable); 
     Problem findById(Long id);
     Long deleteByContests_id(Long id);
+    Page<Problem> findByActive(Boolean active, Pageable pageable);
 }

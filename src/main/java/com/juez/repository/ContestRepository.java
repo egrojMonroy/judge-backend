@@ -17,7 +17,7 @@ import java.util.List;
 @Repository
 public interface ContestRepository extends JpaRepository<Contest, Long> {
 
-    @Query("select contest from Contest contest where contest.creator.login = ?#{principal.username}")
+    @Query("select contest from Contest contest where contest.creator.login = ?#{principal.username} and contest.active = true" )
     Page<Contest> findByCreatorIsCurrentUser(Pageable pageable);
     @Query("select distinct contest from Contest contest left join fetch contest.problems")
     List<Contest> findAllWithEagerRelationships();
@@ -27,6 +27,6 @@ public interface ContestRepository extends JpaRepository<Contest, Long> {
 
     Contest findById(Long id);
 
-    Page<Contest> findByEnddateBefore(ZonedDateTime zonedDateTime, Pageable pageable);
-    Page<Contest> findByStartdateAfterOrEnddateAfter(ZonedDateTime zonedDateTime,ZonedDateTime zonedDateTimed , Pageable pageable);
+    Page<Contest> findByEnddateBeforeAndActiveIs(ZonedDateTime zonedDateTime,Boolean active ,Pageable pageable);
+    Page<Contest> findByStartdateAfterAndActiveIsOrEnddateAfterAndActiveIs(ZonedDateTime zonedDateTime,Boolean active1 ,ZonedDateTime zonedDateTimed, Boolean active2, Pageable pageable);
 }

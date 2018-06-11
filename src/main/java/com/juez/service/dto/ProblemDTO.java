@@ -15,11 +15,11 @@ public class ProblemDTO implements Serializable {
 
     private String name;
 
+    private Boolean active;
+
     private Integer timelimit;
 
     private Integer level;
-
-    private String location;
 
     private Long solutionId;
 
@@ -41,6 +41,14 @@ public class ProblemDTO implements Serializable {
         this.name = name;
     }
 
+    public Boolean isActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     public Integer getTimelimit() {
         return timelimit;
     }
@@ -55,14 +63,6 @@ public class ProblemDTO implements Serializable {
 
     public void setLevel(Integer level) {
         this.level = level;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public Long getSolutionId() {
@@ -107,9 +107,9 @@ public class ProblemDTO implements Serializable {
         return "ProblemDTO{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", active='" + isActive() + "'" +
             ", timelimit=" + getTimelimit() +
             ", level=" + getLevel() +
-            ", location='" + getLocation() + "'" +
             "}";
     }
 }

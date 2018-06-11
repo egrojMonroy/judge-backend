@@ -24,9 +24,13 @@ public class ContestDTO implements Serializable {
 
     private String type;
 
+    private Boolean active;
+
     private Long creatorId;
 
     private Set<ProblemDTO> problems = new HashSet<>();
+
+    private Set<CoderDTO> coders = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -76,6 +80,14 @@ public class ContestDTO implements Serializable {
         this.type = type;
     }
 
+    public Boolean isActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     public Long getCreatorId() {
         return creatorId;
     }
@@ -90,6 +102,14 @@ public class ContestDTO implements Serializable {
 
     public void setProblems(Set<ProblemDTO> problems) {
         this.problems = problems;
+    }
+
+    public Set<CoderDTO> getCoders() {
+        return coders;
+    }
+
+    public void setCoders(Set<CoderDTO> coders) {
+        this.coders = coders;
     }
 
     @Override
@@ -122,6 +142,7 @@ public class ContestDTO implements Serializable {
             ", startdate='" + getStartdate() + "'" +
             ", enddate='" + getEnddate() + "'" +
             ", type='" + getType() + "'" +
+            ", active='" + isActive() + "'" +
             "}";
     }
 }
