@@ -41,16 +41,16 @@
             "fieldType": "String"
         },
         {
+            "fieldName": "active",
+            "fieldType": "Boolean"
+        },
+        {
             "fieldName": "timelimit",
             "fieldType": "Integer"
         },
         {
             "fieldName": "level",
             "fieldType": "Integer"
-        },
-        {
-            "fieldName": "location",
-            "fieldType": "String"
         }
     ],
     "changelogDate": "20180406140138",

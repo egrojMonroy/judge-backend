@@ -72,7 +72,7 @@ public class ContestController {
     public ResponseEntity<List<ContestDTO>> getAllContests(Pageable pageable) {
         log.debug("REST request to get a page of Contests");
         Page<ContestDTO> page = contestService.findAllBeforeEndDate(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/contests");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/contests/before");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
@@ -87,7 +87,7 @@ public class ContestController {
     public ResponseEntity<List<ContestDTO>> getAllContestsAfter(Pageable pageable) {
         log.debug("REST request to get a page of Contests");
         Page<ContestDTO> page = contestService.findAllRunning(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/contests");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/contests/after");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 

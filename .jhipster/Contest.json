@@ -18,10 +18,12 @@
         },
         {
             "relationshipType": "many-to-many",
+            "javadoc": "Registered coders in contest",
+            "otherEntityRelationshipName": "contest",
             "relationshipName": "coder",
             "otherEntityName": "coder",
-            "ownerSide": false,
-            "otherEntityRelationshipName": "contest"
+            "otherEntityField": "id",
+            "ownerSide": true
         }
     ],
     "fields": [
@@ -44,6 +46,10 @@
         {
             "fieldName": "type",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "active",
+            "fieldType": "Boolean"
         }
     ],
     "changelogDate": "20180406140137",

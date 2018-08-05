@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "enhanced-resolve": "^3.3.0",
     "generator-jhipster": "4.8.2"
   }
 }

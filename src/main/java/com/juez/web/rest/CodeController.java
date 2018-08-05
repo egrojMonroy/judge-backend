@@ -86,6 +86,27 @@ public class CodeController {
             .body(result);
     }
    
+/**
+     * POST  /codes : Create a new code.
+     *
+     * @param codeDTO the codeDTO to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new codeDTO, or with status 400 (Bad Request) if the code has already an ID
+     * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
+    @PostMapping("/create/code/time")
+    @ResponseBody
+    public ResponseEntity<String> createCodeAndGetTime(
+        @RequestPart MultipartFile reportFile , 
+        @RequestPart MultipartFile inputFile,
+        @RequestParam String language
+        ) throws IOException, URISyntaxException {
+        
+        String result = codeService.createCodeGetTime(reportFile, inputFile, language);
+        return ResponseEntity.created(new URI("/api/codes/"))
+            .body(result);
+    }
+
+
     public String getCurrentDir() {
         String currentDir = System.getProperty("user.dir");
         return currentDir;

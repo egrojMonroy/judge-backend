@@ -154,6 +154,45 @@ public class CodeService {
         
     }
     
+     /**
+     * Save file on disk
+     * 
+     */
+    public String createCodeGetTime( MultipartFile reportFile, MultipartFile inputFile , String language){
+        String code = "";
+        String code2 = "" ;
+        System.out.println(reportFile.getOriginalFilename());
+        System.out.println(inputFile.getOriginalFilename());
+        try { 
+            code = new String(reportFile.getBytes(), "UTF-8");
+            
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+        }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName(); //get logged in username
+        System.out.println(code);
+        String problemID = "time";
+        //create dir and return actual dir
+        String actualDir = createDir(userName, problemID, language);
+        System.out.println("The actual Dir is " + actualDir +" *********** ");
+        Path path = Paths.get(actualDir);
+        String pathFile = createFile(reportFile,path,reportFile.getOriginalFilename());
+        String pathFile2 = createFile(inputFile,path,inputFile.getOriginalFilename());
+        File f = new File(pathFile); //code
+        File f2 = new File(pathFile2); //input
+        String compName = reportFile.getOriginalFilename();
+        if( language.equalsIgnoreCase("java")) { 
+            compName = compName.replace(".java", "");
+        } else {
+            compName = compName.replace(".cpp", "");
+        }
+        
+		return submissionService.runCodeSyncNoSave(pathFile, pathFile2, reportFile.getOriginalFilename(), compName, actualDir, getCurrentDir());
+        
+    }
+
     public Code getCode(Long id){
         Code code = codeRepository.getOne(id);
         return code;

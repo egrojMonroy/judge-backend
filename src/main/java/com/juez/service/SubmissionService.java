@@ -247,6 +247,36 @@ public class SubmissionService {
             codeRepository.save(code);
             
     }
+    public String runCodeSyncNoSave(String dir_code, String dir_input, String codeName, String compName, String dirFolder, String currentdir) {
+        
+        
+        String compilationName = compName;
+        //input file name without ext
+        String veredict = "In Queue";
+        String bashPath = currentdir;
+        Integer ac = 0;
+        Integer wa = 0;
+        String testPath = dir_input;
+        bashPath += "/utils/Bash-Time.sh  ";
+        System.out.println(bashPath + " " + dir_code+" "+dir_input+" "+codeName+" "+compName+ " "+ dirFolder);
+            veredict = fileService.runScript(bashPath, dir_code+" "+dir_input+" "+codeName+" "+compName+ " "+ dirFolder +" > txt.txt 2>&1 ");
+            System.out.println("$$$$$$$$$$*********VEREDICT "+veredict);
+            
+
+        System.out.println(veredict);
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("**********************************************************************************");
+        System.out.println("************A*******C*******w*****w***a*******************************************");
+        System.out.println("*************N*****F*O*******w***w***a*a******************************************");
+        System.out.println("**************S***O***D*******w*w***a***a*****************************************");
+        System.out.println("***************W*R*****E*******w***a*****a****************************************");
+        System.out.println("****************E*****************************************************************");
+        System.out.println("----------------------------------------------------------------------------------");
+    
+       return veredict;
+        
+}
+
     public Code getCode(Long id){
         Code code = codeRepository.findById(id);
         return code;

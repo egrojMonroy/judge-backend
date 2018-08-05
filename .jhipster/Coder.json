@@ -11,12 +11,10 @@
         },
         {
             "relationshipType": "many-to-many",
-            "javadoc": "Registered coders in contest",
-            "otherEntityRelationshipName": "coder",
             "relationshipName": "contest",
             "otherEntityName": "contest",
-            "otherEntityField": "id",
-            "ownerSide": true
+            "ownerSide": false,
+            "otherEntityRelationshipName": "coder"
         }
     ],
     "fields": [
