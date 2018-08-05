@@ -1,7 +1,7 @@
 apply plugin: 'com.heroku.sdk.heroku-gradle'
 
 heroku {
-  appName = "juez-backend"
+  appName = "judge-backend-2"
 }
 
 gradle.taskGraph.whenReady {taskGraph ->

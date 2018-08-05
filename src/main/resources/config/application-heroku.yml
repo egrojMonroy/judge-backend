@@ -12,7 +12,7 @@
 
 eureka:
     instance:
-        hostname: juez-backend.herokuapp.com
+        hostname: judge-backend-2.herokuapp.com
         non-secure-port: 80
         prefer-ip-address: false
     client:
