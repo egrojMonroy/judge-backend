@@ -341,6 +341,10 @@ public class SubmissionService {
                 
                 json = groupSubmissions(submissions,start);
                 json.put("username", s.getLogin());
+                json.put("firstName", s.getFirstName());
+                json.put("lastName", s.getLastName());
+                json.put("email", s.getEmail());
+
                 jarray.put(json);
             }
             

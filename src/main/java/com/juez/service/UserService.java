@@ -106,7 +106,7 @@ public class UserService {
         newUser.setEmail(email);
         // newUser.setImageUrl(imageUrl);
         // newUser.setLangKey(langKey);
-        newUser.setActivated(false);
+        newUser.setActivated(true);
         // new user is not active
         newUser.setImageUrl("/");
         newUser.setLangKey("en");
