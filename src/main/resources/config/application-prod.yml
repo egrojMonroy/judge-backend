@@ -20,11 +20,12 @@ spring:
         livereload:
             enabled: false
     datasource:
-        # type: com.zaxxer.hikari.HikariDataSource
-        # url: jdbc:postgresql://localhost:5432/juez
-        url: postgres://xwxbqiaiibupkl:8ec6d2e78f04372540b4d6bf36f0b8c4b5532774e5767d181f8b9c3d02bfe6d6@ec2-23-23-216-40.compute-1.amazonaws.com:5432/d83aism2i01p84
-        # username: xwxbqiaiibupkl
-        # password: 8ec6d2e78f04372540b4d6bf36f0b8c4b5532774e5767d181f8b9c3d02bfe6d6
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:postgresql://localhost:5432/juez
+        # username: juez
+        # password: juez
+        username: oppp
+        password: 123456
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
@@ -64,7 +65,7 @@ liquibase:
 #        keyAlias: juez
 # ===================================================================
 server:
-    port: 8080
+    port: 9090
     compression:
         enabled: true
         mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
@@ -94,7 +95,7 @@ jhipster:
                 token-validity-in-seconds-for-remember-me: 2592000
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: juez@localhost
-        base-url: http://10.0.0.77:8080 # Modify according to your server's URL
+        base-url: http://10.0.0.77:9090 # Modify according to your server's URL
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
         graphite:
@@ -115,12 +116,6 @@ jhipster:
             port: 5000
             queue-size: 512
 
-
-    eureka:
-        instance:
-            hostname: judge-backend.herokuapp.com/
-            non-secure-port: 80
-            prefer-ip-address: false
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
