@@ -25,10 +25,10 @@ spring:
     jackson:
         serialization.indent_output: true
     datasource:
-        type: com.zaxxer.hikari.HikariDataSource
+        # type: com.zaxxer.hikari.HikariDataSource
         url: postgres://xwxbqiaiibupkl:8ec6d2e78f04372540b4d6bf36f0b8c4b5532774e5767d181f8b9c3d02bfe6d6@ec2-23-23-216-40.compute-1.amazonaws.com:5432/d83aism2i01p84
-        username: xwxbqiaiibupkl
-        password: 8ec6d2e78f04372540b4d6bf36f0b8c4b5532774e5767d181f8b9c3d02bfe6d6
+        # username: xwxbqiaiibupkl
+        # password: 8ec6d2e78f04372540b4d6bf36f0b8c4b5532774e5767d181f8b9c3d02bfe6d6
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
