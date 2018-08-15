@@ -35,6 +35,9 @@ public class Problem implements Serializable {
     @Column(name = "timelimit")
     private Integer timelimit;
 
+    @Column(name = "timelimitjava")
+    private Integer timelimitjava;
+
     @Column(name = "jhi_level")
     private Integer level;
 
@@ -55,7 +58,7 @@ public class Problem implements Serializable {
     @ManyToOne
     private User creator;
 
-    @ManyToMany(mappedBy = "problems", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "problems")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Contest> contests = new HashSet<>();
@@ -106,6 +109,19 @@ public class Problem implements Serializable {
 
     public void setTimelimit(Integer timelimit) {
         this.timelimit = timelimit;
+    }
+
+    public Integer getTimelimitjava() {
+        return timelimitjava;
+    }
+
+    public Problem timelimitjava(Integer timelimitjava) {
+        this.timelimitjava = timelimitjava;
+        return this;
+    }
+
+    public void setTimelimitjava(Integer timelimitjava) {
+        this.timelimitjava = timelimitjava;
     }
 
     public Integer getLevel() {
@@ -250,6 +266,7 @@ public class Problem implements Serializable {
             ", name='" + getName() + "'" +
             ", active='" + isActive() + "'" +
             ", timelimit=" + getTimelimit() +
+            ", timelimitjava=" + getTimelimitjava() +
             ", level=" + getLevel() +
             "}";
     }

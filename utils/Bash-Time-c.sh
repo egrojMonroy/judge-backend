@@ -11,6 +11,13 @@ set -e
 #4compilationName
 #5Directory
 
+
+# 1 File nam  without extention 
+# 2 ' 4 '
+# 3 { 2 }  
+# 5 output
+# 6 { 5 } 
+
 # Steps live in the same directory as this script.
 STEPS=$(dirname $(realpath $0))
 
@@ -24,10 +31,10 @@ n=0
 
 cd $5
 
-if ! javac -J-Xms32m -J-Xmx256m $1; then 
+
+if ! g++ $1 -o $4 -fno-asm -O2 -Wall -lm --static -std=c++11 -DONLINE_JUDGE; then 
 echo "Compilation Error";
 exit 1;
 fi  
 
-timeout 10s time -p java $4 < $2 > testTime.txt || ( [ $? -eq 124 ] && echo TLE && exit 1)
- 
+timeout 10s time -p ./$4 < $2 > testTime.txt

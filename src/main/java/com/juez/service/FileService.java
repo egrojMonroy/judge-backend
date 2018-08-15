@@ -1,3 +1,4 @@
+
 package com.juez.service;
 
 import org.slf4j.Logger;
@@ -39,6 +40,7 @@ public class FileService {
                 proc.waitFor();
                 StringBuffer output = new StringBuffer();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+                
                 String line = "";                       
                 while ((line = reader.readLine())!= null) {
                         output.append(line + "\n");
@@ -52,5 +54,39 @@ public class FileService {
         }
 		
     }
+    
+    public String runScriptIEO( String command, String values) {
+        System.out.println("COMMAND " + command);
+        try {
+                String target = command; //new String("/home/jorge/ ");
+                Runtime rt = Runtime.getRuntime();
+                Process proc = rt.exec(target+values);
+                proc.waitFor();
+                StringBuffer output = new StringBuffer();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+                
+                String line = "";                       
+                while ((line = reader.readLine())!= null) {
+                        output.append(line + "\n");
+                        System.out.println("line: "+line);
+                }   
+                System.out.println("*******  OUTPUT OF COMMAND  ******** "+output);
 
+
+                reader = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+                                       
+                while ((line = reader.readLine())!= null) {
+                        output.append(line + "\n");
+                        System.out.println("line: "+line);
+                }   
+                System.out.println("*******  OUTPUT OF COMMAND  ******** "+output);
+
+
+                return output.toString();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return "print Stack Trace";
+        }
+		
+    }
 }

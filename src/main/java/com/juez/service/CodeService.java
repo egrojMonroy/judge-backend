@@ -161,8 +161,17 @@ public class CodeService {
     public String createCodeGetTime( MultipartFile reportFile, MultipartFile inputFile , String language){
         String code = "";
         String code2 = "" ;
+        System.out.println("......................................................................");
+        System.out.println("......................................................................");
+        System.out.println("......................................................................");
+        System.out.println("......................................................................");
         System.out.println(reportFile.getOriginalFilename());
         System.out.println(inputFile.getOriginalFilename());
+
+        System.out.println("......................................................................");
+        System.out.println("......................................................................");
+        System.out.println("......................................................................");
+        System.out.println("......................................................................");
         try { 
             code = new String(reportFile.getBytes(), "UTF-8");
             
@@ -189,7 +198,7 @@ public class CodeService {
             compName = compName.replace(".cpp", "");
         }
         
-		return submissionService.runCodeSyncNoSave(pathFile, pathFile2, reportFile.getOriginalFilename(), compName, actualDir, getCurrentDir());
+		return submissionService.runCodeSyncNoSave(pathFile, pathFile2, reportFile.getOriginalFilename(), compName, actualDir, getCurrentDir(), language);
         
     }
 

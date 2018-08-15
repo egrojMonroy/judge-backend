@@ -50,6 +50,9 @@ public class ProblemResourceIntTest {
     private static final Integer DEFAULT_TIMELIMIT = 1;
     private static final Integer UPDATED_TIMELIMIT = 2;
 
+    private static final Integer DEFAULT_TIMELIMITJAVA = 1;
+    private static final Integer UPDATED_TIMELIMITJAVA = 2;
+
     private static final Integer DEFAULT_LEVEL = 1;
     private static final Integer UPDATED_LEVEL = 2;
 
@@ -100,6 +103,7 @@ public class ProblemResourceIntTest {
             .name(DEFAULT_NAME)
             .active(DEFAULT_ACTIVE)
             .timelimit(DEFAULT_TIMELIMIT)
+            .timelimitjava(DEFAULT_TIMELIMITJAVA)
             .level(DEFAULT_LEVEL);
         return problem;
     }
@@ -128,6 +132,7 @@ public class ProblemResourceIntTest {
         assertThat(testProblem.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testProblem.isActive()).isEqualTo(DEFAULT_ACTIVE);
         assertThat(testProblem.getTimelimit()).isEqualTo(DEFAULT_TIMELIMIT);
+        assertThat(testProblem.getTimelimitjava()).isEqualTo(DEFAULT_TIMELIMITJAVA);
         assertThat(testProblem.getLevel()).isEqualTo(DEFAULT_LEVEL);
     }
 
@@ -165,6 +170,7 @@ public class ProblemResourceIntTest {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE.booleanValue())))
             .andExpect(jsonPath("$.[*].timelimit").value(hasItem(DEFAULT_TIMELIMIT)))
+            .andExpect(jsonPath("$.[*].timelimitjava").value(hasItem(DEFAULT_TIMELIMITJAVA)))
             .andExpect(jsonPath("$.[*].level").value(hasItem(DEFAULT_LEVEL)));
     }
 
@@ -182,6 +188,7 @@ public class ProblemResourceIntTest {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE.booleanValue()))
             .andExpect(jsonPath("$.timelimit").value(DEFAULT_TIMELIMIT))
+            .andExpect(jsonPath("$.timelimitjava").value(DEFAULT_TIMELIMITJAVA))
             .andExpect(jsonPath("$.level").value(DEFAULT_LEVEL));
     }
 
@@ -208,6 +215,7 @@ public class ProblemResourceIntTest {
             .name(UPDATED_NAME)
             .active(UPDATED_ACTIVE)
             .timelimit(UPDATED_TIMELIMIT)
+            .timelimitjava(UPDATED_TIMELIMITJAVA)
             .level(UPDATED_LEVEL);
         ProblemDTO problemDTO = problemMapper.toDto(updatedProblem);
 
@@ -223,6 +231,7 @@ public class ProblemResourceIntTest {
         assertThat(testProblem.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProblem.isActive()).isEqualTo(UPDATED_ACTIVE);
         assertThat(testProblem.getTimelimit()).isEqualTo(UPDATED_TIMELIMIT);
+        assertThat(testProblem.getTimelimitjava()).isEqualTo(UPDATED_TIMELIMITJAVA);
         assertThat(testProblem.getLevel()).isEqualTo(UPDATED_LEVEL);
     }
 

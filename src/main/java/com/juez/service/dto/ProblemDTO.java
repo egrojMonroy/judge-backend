@@ -19,6 +19,8 @@ public class ProblemDTO implements Serializable {
 
     private Integer timelimit;
 
+    private Integer timelimitjava;
+
     private Integer level;
 
     private Long solutionId;
@@ -55,6 +57,14 @@ public class ProblemDTO implements Serializable {
 
     public void setTimelimit(Integer timelimit) {
         this.timelimit = timelimit;
+    }
+
+    public Integer getTimelimitjava() {
+        return timelimitjava;
+    }
+
+    public void setTimelimitjava(Integer timelimitjava) {
+        this.timelimitjava = timelimitjava;
     }
 
     public Integer getLevel() {
@@ -109,6 +119,7 @@ public class ProblemDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", active='" + isActive() + "'" +
             ", timelimit=" + getTimelimit() +
+            ", timelimitjava=" + getTimelimitjava() +
             ", level=" + getLevel() +
             "}";
     }

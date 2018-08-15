@@ -12,6 +12,7 @@ entity Problem (problem) {
   name String,
   active Boolean,
   timelimit Integer,
+  timelimitjava Integer
   level Integer
 }
 entity Submission (submission) {

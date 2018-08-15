@@ -171,16 +171,21 @@ public class SubmissionService {
             List<TestCase> listTC = testCaseService.getTestCasesNameByProblem(problemId);
             String testPath = getCurrentDir()+"/test_cases/"+problemId+"/";
             System.out.println("TEST PATH "+testPath);
+            
+            int timelimit = 10;
             if( language.equalsIgnoreCase("java")) { 
                 bashPath += "/utils/compile_java.sh ";
+                timelimit = actualProblem.getTimelimitjava();
             } else {
                 bashPath += "/utils/compile_c.sh ";
+                timelimit = actualProblem.getTimelimit();
             }
+
             for( TestCase tc: listTC ) {
                 String inputName = testPath+tc.getInputfl();
                 String solutionName = testPath+tc.getOutputfl();
                 System.out.println("INPUT 3 "+inputName+ " 4: "+ outputName + " 5:" +solutionName+ " 6:" + codeFolder );
-                veredict = fileService.runScript(bashPath,fileName+" "+compilationName+" "+inputName+" "+outputName +" "+solutionName+" "+codeFolder+" "+actualProblem.getTimelimit());
+                veredict = fileService.runScript(bashPath,fileName+" "+compilationName+" "+inputName+" "+outputName +" "+solutionName+" "+codeFolder+" "+timelimit);
                 System.out.println("$$$$$$$$$$*********VEREDICT "+veredict);
                 if(veredict.toString().contains("Compilation Error")) {
                     veredict = "Compilation Error";
@@ -247,7 +252,7 @@ public class SubmissionService {
             codeRepository.save(code);
             
     }
-    public String runCodeSyncNoSave(String dir_code, String dir_input, String codeName, String compName, String dirFolder, String currentdir) {
+    public String runCodeSyncNoSave(String dir_code, String dir_input, String codeName, String compName, String dirFolder, String currentdir, String language) {
         
         
         String compilationName = compName;
@@ -257,23 +262,32 @@ public class SubmissionService {
         Integer ac = 0;
         Integer wa = 0;
         String testPath = dir_input;
-        bashPath += "/utils/Bash-Time.sh  ";
+        System.out.println("**///////////////**********************"+language+"***************\\\\\\\\\\\\\\\\\\\\**");
+        if( language.equalsIgnoreCase("java")) { 
+            bashPath += "/utils/Bash-Time.sh  ";
+        } else {
+            bashPath += "/utils/Bash-Time-c.sh ";
+        }
+        System.out.println("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+        System.out.println("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
         System.out.println(bashPath + " " + dir_code+" "+dir_input+" "+codeName+" "+compName+ " "+ dirFolder);
-            veredict = fileService.runScript(bashPath, dir_code+" "+dir_input+" "+codeName+" "+compName+ " "+ dirFolder +" > txt.txt 2>&1 ");
+        System.out.println("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+        System.out.println("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+        System.out.println("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+            veredict = fileService.runScriptIEO(bashPath, dir_code+" "+dir_input+" "+codeName+" "+compName+ " "+ dirFolder +"");
             System.out.println("$$$$$$$$$$*********VEREDICT "+veredict);
             
 
         System.out.println(veredict);
-        System.out.println("----------------------------------------------------------------------------------");
-        System.out.println("**********************************************************************************");
-        System.out.println("************A*******C*******w*****w***a*******************************************");
-        System.out.println("*************N*****F*O*******w***w***a*a******************************************");
-        System.out.println("**************S***O***D*******w*w***a***a*****************************************");
-        System.out.println("***************W*R*****E*******w***a*****a****************************************");
-        System.out.println("****************E*****************************************************************");
-        System.out.println("----------------------------------------------------------------------------------");
-    
-       return veredict;
+        int x = veredict.indexOf("real");
+        String time = "";
+        if(x != -1)
+            time = veredict.substring(x + 5, x+ 9);
+        else 
+            time = veredict;
+
+
+       return time;
         
 }
 
