@@ -6,6 +6,8 @@ import com.juez.service.dto.CodeDTO;
 import com.juez.service.mapper.CodeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
@@ -27,6 +29,7 @@ import com.juez.service.FileService;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -245,7 +248,25 @@ public class CodeService {
         
         return filePath;
     }
-
+    public Resource getCodeBySubmission(Long submissionId) {
+        Code ans = codeRepository.findBySubmission_Id(submissionId);
+        CodeDTO codeDTO = codeMapper.toDto(ans);
+        System.out.println(codeDTO);
+        Path filePath = Paths.get(getCurrentDir()+codeDTO.getPath());
+        try {
+            Resource resource = new UrlResource(filePath.toUri());
+            if(resource.exists()) {
+                //byte[] encoded = Base64.encodeBase64(resource.getFile());
+                return resource;
+            } else {
+                System.out.println("ERROR doesnt exist");
+            } 
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+    }
     public void setSubmission( Long id, Long subId ) {
         Code code = codeRepository.findOne(id);
         // Submission submission = submissionRepository.findOne(id); 

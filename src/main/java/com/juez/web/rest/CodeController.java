@@ -6,6 +6,7 @@ import com.juez.domain.Code;
 
 import com.juez.repository.CodeRepository;
 import com.juez.web.rest.util.HeaderUtil;
+import com.sun.mail.iap.Response;
 import com.juez.service.dto.CodeDTO;
 import com.juez.service.mapper.CodeMapper;
 import com.juez.service.FileService;
@@ -13,10 +14,13 @@ import com.juez.service.CodeService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.xnio.channels.SuspendableAcceptChannel;
 import org.zalando.problem.spring.web.advice.general.ProblemAdviceTrait;
 import org.springframework.security.core.Authentication;
@@ -112,5 +116,22 @@ public class CodeController {
         return currentDir;
     }
 
+     /**
+     * GET  /codes : get all the codes.
+     *
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of codes in body
+     * * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
+    @GetMapping("/codes/get/{submissionId}")
+    @Timed
+    public ResponseEntity<Resource> getAllCodes(@PathVariable Long submissionId)  throws URISyntaxException{
+        log.debug("REST request to get a page of Codes");
+        Resource page = codeService.getCodeBySubmission(submissionId);
+        String contentType = "text/plain";
+        return ResponseEntity.ok()
+        .contentType(MediaType.parseMediaType(contentType))
+        .body(page);
+    }
 
 }

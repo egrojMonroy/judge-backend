@@ -10,6 +10,7 @@ import com.juez.web.rest.util.PaginationUtil;
 import com.juez.service.SubmissionService;
 import com.juez.service.dto.SubmissionDTO;
 import com.juez.service.mapper.SubmissionMapper;
+import org.springframework.core.io.Resource;
 import io.github.jhipster.web.util.ResponseUtil;
 
 import org.json.JSONArray;

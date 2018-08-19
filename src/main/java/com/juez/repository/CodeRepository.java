@@ -13,4 +13,5 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface CodeRepository extends JpaRepository<Code, Long> {
     Code findById(Long id);
+    Code findBySubmission_Id(Long submissionId);
 }
