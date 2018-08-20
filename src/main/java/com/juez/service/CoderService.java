@@ -108,7 +108,19 @@ private final UserService userService;
     public boolean coderRegistered(Long contestId){ 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Coder coder = coderRepository.findOneByContests_IdAndUser_Login(contestId, auth.getName());
-        if(coder != null) {
+        User user = userService.getUserWithAuthorities();
+        Contest contest = contestRepository.findById(contestId);
+        System.out.println("-----------------------------------------------");
+        System.out.println("-----------------------------------------------");
+        System.out.println("-----------------------------------------------");
+        System.out.println("-----------------------------------------------");
+        System.out.println(user);
+        System.out.println(contest);
+        System.out.println("-----------------------------------------------");
+        System.out.println("-----------------------------------------------");
+        System.out.println("-----------------------------------------------");
+        System.out.println("-----------------------------------------------");
+        if(coder != null || contest.getCreator() == user) {
             return true;
         } else {
             return false;
