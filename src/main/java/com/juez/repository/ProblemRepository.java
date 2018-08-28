@@ -20,4 +20,11 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
     Problem findById(Long id);
     Long deleteByContests_id(Long id);
     Page<Problem> findByActive(Boolean active, Pageable pageable);
+
+
+
+    @Query(value = "select * from problem where id NOT IN (  select problems_id from contest_problem where contests_id IN (select id from contest where (startdate > now() AND active=true) OR (enddate > now() AND active=true))) /*#pageable*/ ORDER BY name ",
+    countQuery = "select count(*) from problem where id NOT IN (  select problems_id from contest_problem where contests_id IN (select id from contest where (startdate > now() AND active=true) OR (enddate > now() AND active=true))) /*#pageable*/ ORDER BY name ",
+    nativeQuery = true)
+    Page<Problem> findAllWithouContest(Pageable pageable);
 }

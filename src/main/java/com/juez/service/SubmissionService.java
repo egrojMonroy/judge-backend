@@ -186,7 +186,8 @@ public class SubmissionService {
                 String solutionName = testPath+tc.getOutputfl();
                 System.out.println("INPUT 3 "+inputName+ " 4: "+ outputName + " 5:" +solutionName+ " 6:" + codeFolder );
                 veredict = fileService.runScript(bashPath,fileName+" "+compilationName+" "+inputName+" "+outputName +" "+solutionName+" "+codeFolder+" "+timelimit);
-                System.out.println("$$$$$$$$$$*********VEREDICT "+veredict);
+                System.out.println("$$$$$$$$$$*********VEREDICT "+veredict+ " inputName:  "+ inputName);
+
                 if(veredict.toString().contains("Compilation Error")) {
                     veredict = "Compilation Error";
                     wa = 0;
@@ -252,6 +253,16 @@ public class SubmissionService {
             codeRepository.save(code);
             
     }
+    public void deleteFiles( String codeDir, String language) {
+        String bashPath = getCurrentDir();
+        if( language.equalsIgnoreCase("java")) { 
+            bashPath += "/utils/deleteFilesJava.sh ";
+        } else {
+            bashPath += "/utils/deleteFilesCpp.sh ";
+        }
+        fileService.runScript(bashPath,codeDir);
+    }
+
     public String runCodeSyncNoSave(String dir_code, String dir_input, String codeName, String compName, String dirFolder, String currentdir, String language) {
         
         

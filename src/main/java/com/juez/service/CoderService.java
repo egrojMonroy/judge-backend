@@ -112,12 +112,8 @@ private final UserService userService;
         Contest contest = contestRepository.findById(contestId);
         System.out.println("-----------------------------------------------");
         System.out.println("-----------------------------------------------");
-        System.out.println("-----------------------------------------------");
-        System.out.println("-----------------------------------------------");
         System.out.println(user);
         System.out.println(contest);
-        System.out.println("-----------------------------------------------");
-        System.out.println("-----------------------------------------------");
         System.out.println("-----------------------------------------------");
         System.out.println("-----------------------------------------------");
         if(coder != null || contest.getCreator() == user) {

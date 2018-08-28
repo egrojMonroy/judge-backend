@@ -144,6 +144,21 @@ public class ProblemController {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+     /**
+     * GET  /problems : get all the problems.
+     *
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of problems in body
+     */
+    @GetMapping("/problems/withoutcontest")
+    @Timed
+    public ResponseEntity<List<ProblemDTO>> getAllProblemsWithoutCommingContest(Pageable pageable) {
+        log.debug("REST request to get a page of Problems");
+        Page<ProblemDTO> page = problemService.findAllWithoutContest(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/problems");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
     /**
      * POST  /codes : Create a new code.
      *

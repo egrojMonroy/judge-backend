@@ -85,6 +85,18 @@ public class ProblemService {
         return problemRepository.findByCreatorIsCurrentUser(pageable)
             .map(problemMapper::toDto);
     }
+       /**
+     * Get all the problems.
+     *
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public Page<ProblemDTO> findAllWithoutContest(Pageable pageable) {
+        log.debug("Request to get all Problems");
+        return problemRepository.findAllWithouContest(pageable)
+            .map(problemMapper::toDto);
+    }
     /**
      * Get one problem by id.
      *
