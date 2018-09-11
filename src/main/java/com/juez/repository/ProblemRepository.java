@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Spring Data JPA repository for the Problem entity.
@@ -23,8 +24,9 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
 
 
 
-    @Query(value = "select * from problem where id NOT IN (  select problems_id from contest_problem where contests_id IN (select id from contest where (startdate > now() AND active=true) OR (enddate > now() AND active=true))) /*#pageable*/ ORDER BY name ",
-    countQuery = "select count(*) from problem where id NOT IN (  select problems_id from contest_problem where contests_id IN (select id from contest where (startdate > now() AND active=true) OR (enddate > now() AND active=true))) /*#pageable*/ ORDER BY name ",
-    nativeQuery = true)
-    Page<Problem> findAllWithouContest(Pageable pageable);
+    // @Query("select * from problem where id NOT IN (  select problems_id from contest_problem where contests_id IN (select id from contest where (startdate > now() AND active=true) OR (enddate > now() AND active=true)))")
+    // Page<Problem> findAllWithouContest(Pageable pageable);
+
+    Page<Problem> findByIdNotIn(Set<Long> ids, Pageable pageable);
+
 }

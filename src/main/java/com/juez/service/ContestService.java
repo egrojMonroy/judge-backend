@@ -2,6 +2,7 @@ package com.juez.service;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ import com.juez.service.mapper.ProblemMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -158,5 +160,18 @@ public class ContestService {
             System.out.println("PASWORD FALSE");
             return false;
         }
+    }
+    public Set<Long> getProblemsInContest() {
+        Page<ContestDTO> contests = findAllRunning(createPageRequest());
+        Set<Long> ids_problems = new HashSet<Long>();
+        for( ContestDTO element: contests) {
+            for( ProblemDTO e: element.getProblems()) {
+                ids_problems.add(e.getId());
+            } 
+        }
+        return ids_problems;
+    }
+    private Pageable createPageRequest() {
+        return new PageRequest(0, 199999999);
     }
 }

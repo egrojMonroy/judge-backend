@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Set;
 
 import org.springframework.core.io.UrlResource;
 
@@ -38,13 +39,16 @@ public class ProblemService {
 
     private final ProblemMapper problemMapper;
     private final UserService userService;
+    private final ContestService contestService;
     public ProblemService(
         ProblemRepository problemRepository, 
         ProblemMapper problemMapper,
-        UserService userService) {
+        UserService userService, 
+        ContestService contestService) {
         this.problemRepository = problemRepository;
         this.problemMapper = problemMapper;
         this.userService = userService;
+        this.contestService = contestService;
     }
 
     /**
@@ -73,6 +77,29 @@ public class ProblemService {
         return problemRepository.findAll(pageable)
             .map(problemMapper::toDto);
     }
+
+
+    /**
+     * Get all the problems.
+     *
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public Page<ProblemDTO> findAllNotInContest(Pageable pageable) {
+        log.debug("Request to get all Problems");
+        Set<Long> ids_active_problems = contestService.getProblemsInContest();
+        for(Long x: ids_active_problems) {
+            System.out.println(" -   - - - - - -- - - - - --- - - - - - - -  IDS PROBLEMS "+ x);
+        }
+        Page<Problem> problems = problemRepository.findByIdNotIn(ids_active_problems, pageable);
+        for(Problem p: problems) {
+            System.out.println("p-------p-------: "+p.getId()+" "+p.getName() );
+        }
+        return problems
+            .map(problemMapper::toDto);
+    }
+
    /**
      * Get all the problems.
      *
@@ -85,18 +112,18 @@ public class ProblemService {
         return problemRepository.findByCreatorIsCurrentUser(pageable)
             .map(problemMapper::toDto);
     }
-       /**
-     * Get all the problems.
-     *
-     * @param pageable the pagination information
-     * @return the list of entities
-     */
-    @Transactional(readOnly = true)
-    public Page<ProblemDTO> findAllWithoutContest(Pageable pageable) {
-        log.debug("Request to get all Problems");
-        return problemRepository.findAllWithouContest(pageable)
-            .map(problemMapper::toDto);
-    }
+    //    /**
+    //  * Get all the problems.
+    //  *
+    //  * @param pageable the pagination information
+    //  * @return the list of entities
+    //  */
+    // @Transactional(readOnly = true)
+    // public Page<ProblemDTO> findAllWithoutContest(Pageable pageable) {
+    //     log.debug("Request to get all Problems");
+    //     return problemRepository.findAllWithouContest(pageable)
+    //         .map(problemMapper::toDto);
+    // }
     /**
      * Get one problem by id.
      *

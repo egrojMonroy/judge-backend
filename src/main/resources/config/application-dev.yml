@@ -27,8 +27,8 @@ spring:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:postgresql://localhost:5432/juez
-         username: juez
-         password: juez
+        username: juez
+        password: juez
         # username: oppp
         # password: 123456
     jpa:
